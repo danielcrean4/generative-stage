@@ -1,0 +1,85 @@
+<app-world-gate>
+  <section class="source" data-page="source">
+    <header class="page-head">
+      <a routerLink="/sources" data-action="all-sources">{{ w.all }}</a>
+    </header>
+    @if (error(); as message) {
+      <p class="error" role="alert" data-testid="source-error">{{ w.loadFailed }} {{ message }}</p>
+    } @else if (page(); as p) {
+      <h2 class="title">{{ word(p.type) }} <strong data-testid="source-name">{{ p.name }}</strong> <span class="chip">{{ p.set }}</span></h2>
+
+      <section class="panel" data-panel="lives">
+        <h3>{{ w.lives }}</h3>
+        <p><code class="path" data-testid="source-location">{{ p.location }}</code></p>
+        <p class="hint" data-testid="source-readonly">{{ w.readOnly }}</p>
+      </section>
+
+      <section class="panel" data-panel="words">
+        <h3>{{ w.words }}</h3>
+        @if (p.note) {
+          <p data-testid="source-note">{{ p.note }}</p>
+        }
+        @for (t of p.texts; track t.key) {
+          <div class="text-block" [attr.data-key]="t.key">
+            <p class="label">{{ t.label }} <span class="hint">{{ w.from(t.from.split('.')[1]) }}</span></p>
+            <pre class="text">{{ t.text }}</pre>
+          </div>
+        }
+        @if (p.extends.length) {
+          <p class="hint">{{ w.extendsHelp }}</p>
+          <ul class="plain">
+            @for (e of p.extends; track e.id) {
+              <li><a [routerLink]="['/sources', 'style', e.id]">{{ e.name }}</a></li>
+            }
+          </ul>
+        }
+        <details>
+          <summary>{{ w.file }}</summary>
+          <pre class="text">{{ json(p.content) }}</pre>
+        </details>
+      </section>
+
+      <section class="panel" data-panel="pipelines">
+        <h3>{{ w.pipelines }}</h3>
+        @if (p.pipelines.length === 0) {
+          <p class="hint">{{ w.noPipelines }}</p>
+        } @else {
+          <ul class="plain" data-testid="source-pipelines">
+            @for (l of p.pipelines; track l.id) {
+              <li>{{ l.name }} <span class="hint">({{ l.id }})</span></li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section class="panel" data-panel="readers">
+        <h3>{{ w.readBy }}</h3>
+        <p class="hint">{{ w.readByHelp }}</p>
+        @if (p.used_by.length === 0) {
+          <p class="hint" data-testid="no-readers">{{ w.noReaders }}</p>
+        } @else {
+          <ul class="readers" data-testid="source-readers">
+            @for (r of p.used_by; track r.run_id) {
+              <li class="reader" [attr.data-run]="r.run_id">
+                @if (r.thumbnail; as src) {
+                  <img class="thumb" [src]="src" alt="" loading="lazy" />
+                } @else {
+                  <span class="thumb" role="img" aria-label="No picture"></span>
+                }
+                <span class="who">
+                  <a [routerLink]="['/world', r.entity.kind, r.entity.id]" data-action="open-entity">{{ r.entity.title }}</a>
+                  <span class="hint">{{ when(r.started) }} · {{ r.status ?? '—' }}
+                    @if (r.changed) { · <span class="older" data-testid="older">{{ w.older }}</span> }
+                  </span>
+                  <a [routerLink]="['/world', r.entity.kind, r.entity.id, 'runs', r.run_id]" data-action="open-run">{{ w.open }}</a>
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    } @else {
+      <p class="muted">{{ w.loading }}</p>
+    }
+  </section>
+</app-world-gate>

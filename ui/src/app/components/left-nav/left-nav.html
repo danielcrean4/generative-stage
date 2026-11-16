@@ -1,0 +1,66 @@
+<mat-nav-list class="left-nav">
+  <h3 matSubheader>{{ w.world }}</h3>
+  <a mat-list-item [routerLink]="['/projects']" routerLinkActive #projectsLink="routerLinkActive" [activated]="projectsLink.isActive">
+    <span matListItemIcon class="glyph">▤</span>
+    <span matListItemTitle>{{ w.projects }}</span>
+  </a>
+  @for (group of world.kindGroups(); track group.id) {
+    <div class="family" role="group" [attr.aria-label]="group.label" [attr.data-family]="group.id">
+      <h4 class="family-label">{{ group.label }}</h4>
+      @for (kind of group.kinds; track kind.id) {
+        <a
+          mat-list-item
+          class="world-kind"
+          [attr.data-kind]="kind.id"
+          [routerLink]="['/world', kind.id]"
+          routerLinkActive
+          #wk="routerLinkActive"
+          [activated]="wk.isActive"
+        >
+          <span matListItemIcon class="glyph">
+            @if (iconPath(kind.icon); as path) {
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path [attr.d]="path" fill="currentColor" /></svg>
+            } @else {
+              {{ initial(kind.label) }}
+            }
+          </span>
+          <span matListItemTitle>{{ kind.plural_label }}@if (badge(kind); as b) { <span class="form-badge" [attr.data-form]="kind.form" [attr.title]="b.title">{{ b.badge }}</span>}</span>
+          <span matListItemMeta class="count" [attr.aria-label]="w.count(world.counts()[kind.id] ?? 0)">{{ world.counts()[kind.id] ?? 0 }}</span>
+        </a>
+      }
+    </div>
+  }
+  @if (world.catalogError()) {
+    <p class="nav-note" role="alert">{{ w.kindsBroken }}</p>
+  } @else if (!world.slug() && world.listStatus() === 'ready') {
+    <p class="nav-note">{{ w.noProject }}</p>
+  }
+
+  <a mat-list-item [routerLink]="['/vocabulary']" routerLinkActive #vocabLink="routerLinkActive" [activated]="vocabLink.isActive" data-nav="vocabulary">
+    <span matListItemIcon class="glyph">≡</span>
+    <span matListItemTitle>{{ w.vocabulary }}</span>
+  </a>
+  <a mat-list-item [routerLink]="['/story']" routerLinkActive #storyLink="routerLinkActive" [activated]="storyLink.isActive" data-nav="story">
+    <span matListItemIcon class="glyph">⇉</span>
+    <span matListItemTitle>{{ w.story }}</span>
+  </a>
+  <a mat-list-item [routerLink]="['/statistics']" routerLinkActive #statsLink="routerLinkActive" [activated]="statsLink.isActive" data-nav="statistics">
+    <span matListItemIcon class="glyph">▥</span>
+    <span matListItemTitle>{{ w.statistics }}</span>
+  </a>
+
+  <a mat-list-item [routerLink]="['/sources']" routerLinkActive #sourcesLink="routerLinkActive" [activated]="sourcesLink.isActive" data-nav="sources">
+    <span matListItemIcon class="glyph">❝</span>
+    <span matListItemTitle>{{ w.sources }}</span>
+  </a>
+
+  <h3 matSubheader>Modules</h3>
+  <a mat-list-item [routerLink]="['/runs']" routerLinkActive #runsLink="routerLinkActive" [activated]="runsLink.isActive">
+    <span matListItemIcon>▶︎</span>
+    <span matListItemTitle>Runs</span>
+  </a>
+  <a mat-list-item [routerLink]="['/docs']" routerLinkActive #docsLink="routerLinkActive" [activated]="docsLink.isActive">
+    <span matListItemIcon>📖</span>
+    <span matListItemTitle>Docs</span>
+  </a>
+</mat-nav-list>

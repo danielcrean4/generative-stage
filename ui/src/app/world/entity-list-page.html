@@ -1,0 +1,82 @@
+<app-world-gate>
+  @if (kind(); as k) {
+    <section class="world-page" data-page="entity-list" [attr.data-kind]="k.id">
+      <header class="page-head">
+        <h2>{{ k.plural_label }}</h2>
+        @if (formBadge(k); as b) {
+          <span class="badge" data-testid="kind-form" [attr.title]="b.title">{{ b.badge }}</span>
+        }
+        <a [routerLink]="['/world', k.id, 'schema']">{{ w.about }}</a>
+        <span class="spacer"></span>
+        @if (k.parameters) {
+          <a mat-stroked-button [routerLink]="['/world', k.id, 'batch']" data-action="batch">{{ w.batch }}</a>
+        }
+        <a mat-flat-button [routerLink]="['/world', k.id, 'new']" data-action="create">{{ w.create(k.label) }}</a>
+      </header>
+
+      <div class="filters">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>{{ w.searchLabel }}</mat-label>
+          <input matInput type="search" [value]="search()" (input)="setSearch($any($event.target).value)" [placeholder]="w.searchHint" />
+        </mat-form-field>
+        @if (k.tags_field) {
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>{{ w.tagLabel }}</mat-label>
+            <select matNativeControl (change)="setTag($any($event.target).value)">
+              <option value="" [selected]="tag() === ''">{{ w.anyTag }}</option>
+              @for (t of tags(); track t) {
+                <option [value]="t" [selected]="tag() === t">{{ t }}</option>
+              }
+            </select>
+          </mat-form-field>
+        }
+        <mat-checkbox [checked]="showArchived()" (change)="showArchived.set($event.checked)">{{ w.archivedToggle }}</mat-checkbox>
+      </div>
+
+      @if (error(); as message) {
+        <p class="error" role="alert">{{ message }}</p>
+      }
+      @if (notice(); as message) {
+        <p class="error" role="alert">{{ message }}</p>
+      }
+
+      @if (shown() === null) {
+        <p class="muted">{{ w.loading }}</p>
+      } @else if (everything()!.length === 0) {
+        <div class="empty" data-testid="empty-kind">
+          <p><strong>{{ w.emptyTitle(k.plural_label) }}</strong></p>
+          <p class="hint">{{ w.emptyHelp(k.label, what()) }}</p>
+        </div>
+      } @else if (shown()!.length === 0) {
+        <p class="muted" data-testid="no-match">{{ w.noMatch }}</p>
+      } @else {
+        <ul class="cards" [attr.aria-label]="k.plural_label">
+          @for (e of shown(); track e.id) {
+            <li class="card" [class.archived-card]="e.archived" [attr.data-entity]="e.id">
+              <div class="card-main">
+                <a class="row-title" [routerLink]="['/world', e.kind, e.id]">{{ e.title }}</a>
+                <p class="excerpt">{{ brief(e) || w.noBrief }}</p>
+                @if (entityTags(e).length) {
+                  <div class="tags">
+                    @for (t of entityTags(e); track t) {
+                      <button type="button" class="tag" (click)="setTag(t)">{{ t }}</button>
+                    }
+                  </div>
+                }
+              </div>
+              <div class="card-actions">
+                @if (e.archived) {
+                  <span class="badge">{{ w.archivedBadge }}</span>
+                }
+                <span class="muted">{{ w.colUpdated }} {{ when(e) }}</span>
+                <button mat-button (click)="toggleArchive(e)">{{ e.archived ? w.restore : w.archive }}</button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  } @else {
+    <p class="error" role="alert">{{ w.notFound }}</p>
+  }
+</app-world-gate>

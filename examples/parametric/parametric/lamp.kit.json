@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "kind": "lamp",
+  "subject_fields": ["theme", "material"],
+  "rules": [
+    {"about": "every lamp", "ranges": {"height_cm": [30, 200], "base_radius_cm": [6, 30]}},
+    {"about": "modern lamps are slim and bright", "when": {"theme": "modern"},
+     "ranges": {"height_cm": [60, 140], "base_radius_cm": [6, 14]}, "builder": "drum",
+     "colours": {"colour": ["#7fa6bf", "#c4b49a"]}},
+    {"about": "rustic lamps are squat", "when": {"theme": "rustic"},
+     "ranges": {"height_cm": [30, 90], "base_radius_cm": [14, 30]}, "choices": {"has_arm": [false]},
+     "colours": {"colour": ["#a0714f", "#7a5230", "#c9a66b"]}},
+    {"about": "industrial lamps swing", "when": {"theme": "industrial"},
+     "ranges": {"height_cm": [80, 200], "arm_reach_cm": [20, 60]}, "builder": "cone", "choices": {"has_arm": [true]},
+     "colours": {"colour": ["#4a4f55", "#2e3236"]}},
+    {"about": "oak is never thin", "when": {"material": "oak"}, "ranges": {"base_radius_cm": [12, 30]}},
+    {"about": "steel is never tiny", "when": {"material": "steel"}, "ranges": {"height_cm": [50, 200]}}
+  ],
+  "defaults": {"has_arm": false},
+  "forbidden": [
+    {"theme": "rustic", "shade": "cone"}
+  ]
+}

@@ -1,0 +1,71 @@
+<app-world-gate>
+  @if (kind(); as k) {
+    <section class="world-page" data-page="parametric-batch" [attr.data-kind]="k.id">
+      <header class="page-head">
+        <h2>{{ w.title(k.label) }}</h2>
+        <a [routerLink]="['/world', k.id]">{{ k.plural_label }}</a>
+      </header>
+      <p class="hint">{{ w.help }}</p>
+
+      @if (error(); as message) {
+        <p class="error" role="alert">{{ w.failed }} {{ message }}</p>
+      }
+
+      @if (info(); as i) {
+        @if (!i.has_kit) {
+          <p class="muted" data-testid="no-kit">{{ w.noKit }}</p>
+        } @else {
+          <form class="make" (submit)="$event.preventDefault(); make()" data-form="batch">
+            @for (f of crossFields(); track f[0]) {
+              <fieldset [attr.data-cross]="f[0]">
+                <legend>{{ f[0] }}</legend>
+                @for (v of f[1]; track v) {
+                  <label><input type="checkbox" [checked]="isCrossed(f[0], v)" (change)="toggle(f[0], v)" [attr.data-value]="v" /> {{ v }}</label>
+                }
+              </fieldset>
+            }
+            <label>{{ w.count }} <input type="number" min="1" max="200" [value]="count()" (input)="setNumber('count', $event)" data-field="count" /></label>
+            <label>{{ w.seed }} <input type="number" min="0" [value]="seed()" (input)="setNumber('seed', $event)" data-field="seed" /></label>
+            <button mat-flat-button type="submit" [disabled]="busy()" data-action="make-batch">{{ busy() ? w.making : w.make }}</button>
+          </form>
+        }
+      }
+
+      @if (batch(); as b) {
+        <section class="sheet" data-panel="contact-sheet" [attr.data-batch]="b.id">
+          <h3>{{ w.sheet }}</h3>
+          <p class="hint" data-testid="batch-summary">{{ w.summary(b.tiles.length, b.seconds.total, b.dropped) }}</p>
+          <div class="tiles">
+            @for (t of b.tiles; track t.id) {
+              <figure class="tile" [attr.data-tile]="t.id" [attr.data-verdict]="t.verdict" [attr.data-mark]="mark(t)?.verdict ?? null">
+                <img [src]="url(t)" [alt]="'Variant ' + t.id" width="160" height="160" loading="lazy" />
+                <figcaption>
+                  <strong>{{ t.id }}</strong> {{ label(t) }}
+                  <span class="badge" [class.bad]="t.verdict !== 'pass'">{{ t.verdict }}</span>
+                  @for (g of t.gates; track g.id) {
+                    @if (g.verdict !== 'pass') {
+                      <span class="gate" [attr.title]="g.about">{{ g.id }} ({{ g.value }})</span>
+                    }
+                  }
+                </figcaption>
+                <div class="marks">
+                  @for (v of triage; track v) {
+                    <button type="button" [class.on]="mark(t)?.verdict === v" (click)="set(t, v)" [attr.data-triage]="v">{{ w.verdicts[v] }}</button>
+                  }
+                </div>
+                @if (mark(t); as m) {
+                  <input type="text" class="note" [value]="m.note" [placeholder]="w.note" (change)="setNote(t, $any($event.target).value)" data-field="triage-note" />
+                }
+              </figure>
+            }
+          </div>
+          <p class="tally" data-testid="triage-tally">keep {{ counts().keep }} · fix {{ counts().fix }} · improve {{ counts().improve }} · remove {{ counts().remove }}</p>
+          <button mat-flat-button type="button" (click)="createKept()" [disabled]="busy() || counts().keep === 0" data-action="create-kept">{{ busy() ? w.creating : w.create }}</button>
+          @if (notice(); as n) {
+            <p class="hint" data-testid="batch-notice">{{ n }}</p>
+          }
+        </section>
+      }
+    </section>
+  }
+</app-world-gate>

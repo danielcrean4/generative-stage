@@ -1,0 +1,33 @@
+{
+  "kinds": [
+    {
+      "id": "errand",
+      "label": "Errand",
+      "plural_label": "Errands",
+      "schema": "errand.schema.json",
+      "title_field": "name",
+      "icon": "flag",
+      "family": "script",
+      "form": "branching"
+    },
+    {
+      "id": "talk",
+      "label": "Talk",
+      "plural_label": "Talks",
+      "schema": "talk.schema.json",
+      "title_field": "key",
+      "icon": "chat",
+      "family": "script",
+      "form": "branching"
+    },
+    {
+      "id": "lamp",
+      "label": "Lamp",
+      "plural_label": "Lamps",
+      "schema": "lamp.schema.json",
+      "title_field": "name",
+      "icon": "light",
+      "family": "prop"
+    }
+  ]
+}

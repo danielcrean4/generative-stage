@@ -1,0 +1,78 @@
+<section class="search" aria-label="Search the docs">
+  <div class="controls">
+    <label class="box">
+      <span>Search the docs</span>
+      <input
+        type="search"
+        [value]="term()"
+        (input)="term.set($any($event.target).value)"
+        placeholder="for example: gpu lock"
+        autocomplete="off"
+      />
+    </label>
+    <label class="scope">
+      <input
+        type="checkbox"
+        [checked]="all()"
+        [disabled]="!project()"
+        (change)="setAll($any($event.target).checked)"
+      />
+      Search all projects
+    </label>
+  </div>
+
+  <div aria-live="polite">
+    @if (state(); as s) {
+      @if (s.kind === 'loading') {
+        <p class="state" role="status">Searching...</p>
+      } @else if (s.kind === 'error') {
+        <app-run-view-problem [error]="s.error" />
+      } @else if (s.kind === 'done') {
+        @if (s.response.hits.length === 0) {
+          <p class="state">
+            Nothing found for "{{ s.query }}"{{ all() ? ' in any project' : ' in this project' }}.
+            Try a shorter word{{ all() ? '' : ' or search all projects' }}.
+          </p>
+        } @else {
+          <p class="count">
+            {{ s.response.total_hits }} {{ s.response.total_hits === 1 ? 'match' : 'matches' }} in
+            {{ s.response.docs_matched }} {{ s.response.docs_matched === 1 ? 'doc' : 'docs' }}.
+            @if (s.response.truncated) {
+              Showing the first {{ s.response.hits.length }}; narrow the search to see the rest.
+            }
+          </p>
+          <ol class="hits">
+            @for (hit of s.response.hits; track hit.project + hit.path + hit.line) {
+              <li>
+                <div class="head">
+                  @if (all()) {
+                    <span class="project">{{ hit.project }}</span>
+                  }
+                  <a
+                    class="doc"
+                    [routerLink]="['/docs', hit.project, 'file']"
+                    [queryParams]="{ path: hit.path, line: hit.line }"
+                    >{{ hit.title }}</a
+                  >
+                  @if (hit.heading) {
+                    <span class="heading">under "{{ hit.heading }}"</span>
+                  }
+                </div>
+                <p class="excerpt">
+                  @for (part of markParts(hit.excerpt, s.query); track $index) {
+                    @if (part.hit) {
+                      <mark>{{ part.text }}</mark>
+                    } @else {
+                      {{ part.text }}
+                    }
+                  }
+                </p>
+                <p class="where">{{ hit.path }}:{{ hit.line }}</p>
+              </li>
+            }
+          </ol>
+        }
+      }
+    }
+  </div>
+</section>

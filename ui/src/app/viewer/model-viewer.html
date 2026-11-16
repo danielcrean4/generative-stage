@@ -1,0 +1,54 @@
+<div class="viewer" [attr.data-state]="state()" data-testid="model-viewer">
+  <div class="stage">
+    <canvas #canvas tabindex="0" role="img" [attr.aria-label]="w.canvas(name())" data-testid="viewer-canvas"></canvas>
+    @if (state() === 'loading') {
+      <p class="overlay" data-testid="viewer-loading">{{ w.loading }}</p>
+    } @else if (state() === 'error') {
+      <p class="overlay error" role="alert" data-testid="viewer-error">
+        {{ problem() }}
+        @if (!unavailable) {
+          <a [href]="url()" download>{{ w.download }}</a>
+        }
+      </p>
+    }
+  </div>
+
+  @if (state() === 'ready') {
+    <div class="bar">
+      <button mat-stroked-button type="button" (click)="resetView()" data-action="reset-view">{{ w.reset }}</button>
+      <button mat-stroked-button type="button" (click)="toggleWireframe()" [attr.aria-pressed]="wireframe()" data-action="wireframe">{{ w.wireframe }}</button>
+    </div>
+    <p class="stats" data-testid="viewer-stats">{{ stats() }}</p>
+
+    @if (clips().length) {
+      <div class="clips" role="group" [attr.aria-label]="w.clips" data-testid="clip-player">
+        <label>
+          {{ w.clip }}
+          <select data-testid="clip-select" (change)="chooseClip($any($event.target).value)">
+            @for (c of clips(); track c.name) {
+              <option [value]="c.name" [selected]="c.name === clip()">{{ c.name }} ({{ w.length(seconds(c.duration)) }})</option>
+            }
+          </select>
+        </label>
+        <button mat-flat-button type="button" (click)="togglePlay()" data-action="play-clip">{{ playing() ? w.pause : w.play }}</button>
+        <label class="scrub">
+          <span class="visually-hidden">{{ w.position }}</span>
+          <input type="range" min="0" [max]="duration()" step="0.01" [value]="time()" (input)="scrub(+$any($event.target).value)" data-testid="clip-scrub" />
+        </label>
+        <output class="clock" data-testid="clip-time">{{ seconds(time()) }} / {{ seconds(duration()) }}</output>
+        <label class="inline">
+          <input type="checkbox" [checked]="loop()" (change)="setLoop($any($event.target).checked)" data-testid="clip-loop" />
+          {{ w.loop }}
+        </label>
+        <label>
+          {{ w.speed }}
+          <select data-testid="clip-speed" (change)="setSpeed(+$any($event.target).value)">
+            @for (s of speeds; track s) {
+              <option [value]="s" [selected]="s === speed()">{{ w.speedOption(s) }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    }
+  }
+</div>

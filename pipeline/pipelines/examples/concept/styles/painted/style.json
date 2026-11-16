@@ -1,0 +1,13 @@
+{
+  "id": "painted",
+  "name": "Softly painted",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "concept": "{subject}, {motif}, softly painted concept art, gentle shading"
+    },
+    "negative": "text, watermark"
+  },
+  "terms": ["painted", "concept art", "gentle shading"]
+}

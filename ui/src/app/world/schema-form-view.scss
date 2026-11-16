@@ -1,0 +1,54 @@
+.schema-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 42rem;
+}
+
+.wide {
+  width: 100%;
+}
+
+.group {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 0.5rem 1rem 0.75rem;
+  margin: 0.25rem 0 0.75rem;
+
+  legend {
+    padding: 0 0.4rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.field-error {
+  color: var(--mat-sys-error);
+  font-size: 0.8rem;
+  margin: -0.9rem 0 0.75rem 1rem;
+}
+
+.has-error {
+  --mdc-outlined-text-field-outline-color: var(--mat-sys-error);
+  --mdc-outlined-text-field-label-text-color: var(--mat-sys-error);
+}
+
+.unsupported-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.unsupported {
+  background: var(--mat-sys-surface-container);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem 0;
+  overflow: auto;
+  max-height: 10rem;
+}
+
+.hint {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin: 0 0 0.75rem;
+}

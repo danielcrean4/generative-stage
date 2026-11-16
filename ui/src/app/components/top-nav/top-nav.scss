@@ -1,0 +1,55 @@
+:host {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.brand {
+  flex: none;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.subtitle {
+  opacity: 0.75;
+  font-size: 0.85rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.project-trigger {
+  color: inherit;
+  align-self: center;
+}
+
+.project-error {
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+}
+
+.world-project {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.world-name,
+.world-trigger {
+  color: inherit;
+  font-weight: 600;
+}
+
+.world-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

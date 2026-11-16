@@ -1,0 +1,13 @@
+{
+  "id": "vinyl_toy",
+  "name": "Soft vinyl toy",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "character": "{subject}, {motif}, soft vinyl toy figure, smooth rounded forms"
+    },
+    "negative": "text, watermark"
+  },
+  "terms": ["vinyl", "toy figure", "rounded forms"]
+}

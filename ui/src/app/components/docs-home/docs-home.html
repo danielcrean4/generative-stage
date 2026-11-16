@@ -1,0 +1,62 @@
+<section class="docs-home">
+  <h2>Docs</h2>
+  <p class="intro">
+    The markdown docs of each registered project, read-only. Pick a project to browse its docs, or
+    search them. To change a doc, edit it in the repo.
+  </p>
+
+  @if (projectsLoading()) {
+    <p class="state" role="status">Loading projects...</p>
+  } @else if (projectsError()) {
+    <app-run-view-problem [error]="projectsError()" />
+    <button type="button" (click)="loadProjects()">Try again</button>
+  } @else if (projects().length === 0) {
+    <p class="state">
+      No project is registered with the read-only server. Start it with
+      <code>--project path/to/studio.project.json</code>; see server/docs/docs_view.md.
+    </p>
+  } @else {
+    <nav aria-label="Projects" class="projects">
+      <ul>
+        @for (p of projects(); track p.slug) {
+          <li>
+            <a
+              [routerLink]="['/docs', p.slug]"
+              queryParamsHandling="preserve"
+              [attr.aria-current]="p.slug === project() ? 'page' : null"
+              [class.chosen]="p.slug === project()"
+            >
+              <span class="name">{{ p.name }}</span>
+              <span class="meta">{{ p.doc_count }} docs</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    @if (project() && !chosen()) {
+      <p class="state" role="alert">
+        No registered project is called "{{ project() }}". Pick one above.
+      </p>
+    } @else {
+      <app-docs-search [project]="project()" />
+
+      @if (!project()) {
+        <p class="state">Choose a project to browse its docs.</p>
+      } @else if (!searching()) {
+        <h3>All docs in {{ chosen()?.name }}</h3>
+        @if (treeLoading()) {
+          <p class="state" role="status">Loading the docs tree...</p>
+        } @else if (treeError()) {
+          <app-run-view-problem [error]="treeError()" />
+        } @else if (tree(); as t) {
+          @if (t.count === 0) {
+            <p class="state">This project has no markdown docs in its docs folders.</p>
+          } @else {
+            <app-docs-tree [project]="project()" [root]="t.tree" />
+          }
+        }
+      }
+    }
+  }
+</section>

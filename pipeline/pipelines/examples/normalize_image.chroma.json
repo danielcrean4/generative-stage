@@ -1,0 +1,23 @@
+{
+  "background": {
+    "method": "chroma_key",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "tolerance": 75,
+    "feather": 35,
+    "luma_weight": 0.25,
+    "holes": true,
+    "despill": 1
+  },
+  "canvas_size": 256,
+  "margin": 16,
+  "output_mode": "rgba",
+  "background_color": [
+    0,
+    0,
+    0
+  ]
+}

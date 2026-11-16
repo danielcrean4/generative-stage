@@ -1,0 +1,15 @@
+{
+  "link_types": [
+    {
+      "id": "tends",
+      "label": "tends",
+      "inverse_label": "tended in",
+      "source_kinds": [
+        "errand"
+      ],
+      "target_kinds": [
+        "lamp"
+      ]
+    }
+  ]
+}

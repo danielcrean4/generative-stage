@@ -1,0 +1,74 @@
+<section class="side-panel" data-panel="links">
+  <h3>{{ w.title }}</h3>
+  @if (error(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+  @if (links() === null) {
+    <p class="muted">{{ w.loading }}</p>
+  } @else if (groups().length === 0) {
+    <p class="muted" data-testid="no-links">{{ w.none }}</p>
+  } @else {
+    @for (group of groups(); track group.key) {
+      <div class="group" [attr.data-link-group]="group.key">
+        <h4>{{ group.label }}</h4>
+        <ul class="links">
+          @for (link of group.links; track link.id) {
+            <li class="link">
+              <span>
+                <a [routerLink]="['/world', link.other.kind, link.other.id]">{{ link.other.title }}</a>
+                <span class="kind-chip">{{ kindLabel(link.other.kind) }}</span>
+              </span>
+              @if (!locked()) {
+                <button mat-button (click)="remove(link)" [attr.aria-label]="w.remove + ': ' + link.other.title">{{ w.remove }}</button>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  }
+
+  @if (locked()) {
+    <p class="hint">{{ w.locked }}</p>
+  } @else if (options().length === 0) {
+    <p class="hint">{{ w.noTypes }}</p>
+  } @else if (!adding()) {
+    <button mat-stroked-button (click)="startAdding()" data-action="add-link">{{ w.add }}</button>
+  } @else {
+    <div class="adder" data-testid="link-adder">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ w.typeLabel }}</mat-label>
+        <select matNativeControl (change)="chooseOption($any($event.target).value)">
+          <option value="" [selected]="optionKey() === ''">{{ w.chooseType }}</option>
+          @for (o of options(); track o.key) {
+            <option [value]="o.key" [selected]="optionKey() === o.key">{{ o.label }}</option>
+          }
+        </select>
+      </mat-form-field>
+      @if (option()) {
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>{{ w.searchLabel }}</mat-label>
+          <input matInput type="search" [value]="search()" [placeholder]="w.searchHint" (input)="setSearch($any($event.target).value)" />
+        </mat-form-field>
+        @if (results() === null) {
+          <p class="muted">{{ w.loading }}</p>
+        } @else if (results()!.length === 0) {
+          <p class="muted">{{ w.noResults }}</p>
+        } @else {
+          <ul class="results">
+            @for (r of results(); track r.id) {
+              <li class="result" [attr.data-candidate]="r.id">
+                <span>{{ r.title }} <span class="kind-chip">{{ kindLabel(r.kind) }}</span></span>
+                <button mat-button (click)="pick(r)" [attr.aria-label]="w.pick + ' ' + r.title">{{ w.pick }}</button>
+              </li>
+            }
+          </ul>
+        }
+      }
+      @if (addError(); as message) {
+        <p class="error" role="alert">{{ message }}</p>
+      }
+      <div><button mat-button (click)="stopAdding()">{{ w.cancel }}</button></div>
+    </div>
+  }
+</section>

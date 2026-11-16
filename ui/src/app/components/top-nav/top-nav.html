@@ -1,0 +1,22 @@
+<span class="brand">{{ brand }}</span>
+<span class="world-project" data-testid="world-project">
+  @if (world.current(); as project) {
+    <span class="subtitle">{{ w.label }}</span>
+    @if (world.usable().length > 1) {
+      <button mat-button class="world-trigger" [matMenuTriggerFor]="worldMenu" [attr.aria-label]="w.switch">
+        {{ project.name ?? project.slug }} ▾
+      </button>
+      <mat-menu #worldMenu="matMenu">
+        @for (p of world.usable(); track p.slug) {
+          <button mat-menu-item [disabled]="p.slug === project.slug" (click)="pickWorld(p.slug)">{{ p.name ?? p.slug }}</button>
+        }
+        <a mat-menu-item routerLink="/projects">{{ w.manage }}</a>
+      </mat-menu>
+    } @else {
+      <a class="world-name" routerLink="/projects">{{ project.name ?? project.slug }}</a>
+    }
+  } @else if (world.listStatus() === 'ready') {
+    <a class="world-name" routerLink="/projects">{{ w.none }}</a>
+  }
+</span>
+<span class="spacer"></span>

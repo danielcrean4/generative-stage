@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "pipeline": "../icon.pipeline.json",
+  "motif": "motifs/workshop_made.json",
+  "contract": "contract.json",
+  "styles": [
+    "soft_toy",
+    "bad_doodle",
+    "photo_real"
+  ],
+  "subjects": [
+    {
+      "file": "subjects/hand_drill.json",
+      "seed": 2611
+    },
+    {
+      "file": "subjects/paper_lantern.json",
+      "seed": 2612
+    },
+    {
+      "file": "subjects/music_box.json",
+      "seed": 2613
+    },
+    {
+      "file": "subjects/round_spectacles.json",
+      "seed": 2614
+    },
+    {
+      "file": "subjects/dried_herbs.json",
+      "seed": 2615
+    }
+  ],
+  "spill": {
+    "edge_px": 2,
+    "max_distance_to_key": 60
+  },
+  "sheet": {
+    "cell": 256,
+    "background": [
+      128,
+      128,
+      128
+    ],
+    "label_height": 24
+  }
+}

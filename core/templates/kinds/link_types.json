@@ -1,0 +1,39 @@
+{
+  "link_types": [
+    {
+      "id": "lives_in",
+      "label": "lives in",
+      "inverse_label": "home of",
+      "source_kinds": ["character"],
+      "target_kinds": ["setting"]
+    },
+    {
+      "id": "belongs_to",
+      "label": "belongs to",
+      "inverse_label": "owns",
+      "source_kinds": ["prop"],
+      "target_kinds": ["character"]
+    },
+    {
+      "id": "found_in",
+      "label": "found in",
+      "inverse_label": "holds",
+      "source_kinds": ["prop", "character"],
+      "target_kinds": ["setting"]
+    },
+    {
+      "id": "part_of",
+      "label": "part of",
+      "inverse_label": "contains",
+      "source_kinds": ["setting"],
+      "target_kinds": ["setting"]
+    },
+    {
+      "id": "knows",
+      "label": "knows",
+      "inverse_label": "known by",
+      "source_kinds": ["character"],
+      "target_kinds": ["character"]
+    }
+  ]
+}

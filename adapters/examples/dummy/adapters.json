@@ -1,0 +1,18 @@
+{
+  "adapters": [
+    {
+      "id": "dummy-image",
+      "kind": "image",
+      "description": "The worked example of docs/adapters.md: a flat colour, no model",
+      "argv": ["{python}", "-I", "{repo}/adapters/examples/dummy/dummy_image.py", "--prompt={prompt}",
+               "--seed", "{seed}", "--width", "{width}", "--height", "{height}", "--output", "{output}"],
+      "requires": ["cpu"],
+      "sandbox": {"network": "deny"},
+      "gpu": false,
+      "timeout_seconds": 60,
+      "model": {"name": "dummy-image 1"},
+      "licence": "MIT (this repository). No model and no weights."
+    }
+  ],
+  "defaults": {"image": "dummy-image"}
+}

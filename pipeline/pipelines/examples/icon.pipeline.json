@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "id": "icon",
+  "name": "Icons from a concept image",
+  "kind": "icon",
+  "capture": {
+    "background": {
+      "method": "chroma_key",
+      "color": [
+        255,
+        0,
+        255
+      ],
+      "tolerance": 75,
+      "feather": 35,
+      "luma_weight": 0.25,
+      "holes": true,
+      "despill": 1,
+      "words": "flat pure bright magenta #ff00ff background"
+    },
+    "framing": {
+      "words": "single isolated whole object, centered, generous margins, readable inventory icon, no text or logos, no cast shadow"
+    }
+  },
+  "stages": [
+    {
+      "id": "concept",
+      "label": "Concept image",
+      "tool": "concept",
+      "inputs": {},
+      "reads": [
+        "capture",
+        "style.prompt",
+        "subject",
+        "motif"
+      ],
+      "params": {
+        "width": 512,
+        "height": 512
+      },
+      "outputs": [
+        "image.png"
+      ]
+    },
+    {
+      "id": "tidy_image",
+      "label": "Key out the background and fit the canvas",
+      "tool": "normalize_image",
+      "inputs": {
+        "image": "concept/image.png"
+      },
+      "reads": [
+        "capture.background"
+      ],
+      "params": {
+        "canvas_size": 256,
+        "margin": 16,
+        "output_mode": "rgba"
+      },
+      "outputs": [
+        "image.png"
+      ]
+    }
+  ],
+  "choices": {
+    "style": {
+      "label": "Style",
+      "options": [
+        "soft_toy",
+        "soft_toy_night"
+      ],
+      "default": "soft_toy"
+    },
+    "motif": {
+      "label": "Motif",
+      "options": [
+        "workshop_made",
+        "plain"
+      ],
+      "default": "workshop_made"
+    },
+    "seed": {
+      "label": "Seed",
+      "min": 0,
+      "max": 4294967295,
+      "default": 1
+    },
+    "candidates": {
+      "label": "Candidates",
+      "min": 1,
+      "max": 4,
+      "default": 1
+    }
+  }
+}

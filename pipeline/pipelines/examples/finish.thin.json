@@ -1,0 +1,112 @@
+{
+  "contract": {
+    "up_axis": "+y",
+    "front_axis": "+z",
+    "target_size": 2.0,
+    "scale_axis": "largest",
+    "face_budget": 8000
+  },
+  "clean_mesh": {
+    "weld_distance_share": 1e-05,
+    "small_piece_area_share": 0.01,
+    "orientation": {
+      "view": {
+        "drop_axis": 2,
+        "transpose": false,
+        "flip_x": false,
+        "flip_y": true
+      }
+    }
+  },
+  "decimate": {
+    "preserve_topology": true
+  },
+  "capture": {
+    "background": {
+      "tolerance": 236
+    },
+    "view": {
+      "camera": {
+        "yaw": [
+          -30,
+          30,
+          15
+        ],
+        "elevation": [
+          -30,
+          0,
+          10
+        ]
+      }
+    }
+  },
+  "gate": {
+    "profile": "v2",
+    "thin": true,
+    "min_silhouette_iou": 0.6,
+    "max_deficit": 0.15,
+    "max_excess": 0.15,
+    "max_aspect_error": 0.15,
+    "min_depth_ratio": 0.15,
+    "max_thin_sheet_share": 0.2,
+    "max_pieces": 1,
+    "review_margin": 0.05,
+    "orientation_margin": 0.1,
+    "search_seconds": 10
+  },
+  "review_sheet": {
+    "render": {
+      "size": 256,
+      "supersample": 2,
+      "margin": 0.08,
+      "shading": "smooth",
+      "background": [
+        244,
+        244,
+        244
+      ],
+      "surface": [
+        176,
+        182,
+        196
+      ],
+      "ambient": 0.35,
+      "light": [
+        -0.4,
+        0.6,
+        0.7
+      ]
+    },
+    "gap": 8,
+    "padding": 12,
+    "font_size": 14,
+    "line_height": 19,
+    "sheet_background": [
+      255,
+      255,
+      255
+    ],
+    "text": [
+      30,
+      30,
+      30
+    ],
+    "verdict_colours": {
+      "pass": [
+        30,
+        120,
+        50
+      ],
+      "review": [
+        190,
+        120,
+        0
+      ],
+      "fail": [
+        190,
+        30,
+        30
+      ]
+    }
+  }
+}

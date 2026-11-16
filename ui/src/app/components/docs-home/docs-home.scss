@@ -1,0 +1,51 @@
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+.intro {
+  max-width: 45rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+.projects ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.projects a {
+  display: flex;
+  flex-direction: column;
+  min-width: 11rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.projects a:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+.projects a.chosen {
+  border: 2px solid var(--mat-sys-primary);
+  padding: calc(0.5rem - 1px) calc(0.9rem - 1px);
+  background: var(--mat-sys-secondary-container);
+}
+.projects a:focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+.name {
+  font-weight: 500;
+}
+.meta,
+.state {
+  color: var(--mat-sys-on-surface-variant);
+}
+.meta {
+  font-size: 0.85rem;
+}
+h3 {
+  margin: 1.25rem 0 0.5rem;
+}

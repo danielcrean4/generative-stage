@@ -1,0 +1,282 @@
+<app-world-gate>
+  <section class="trace" data-page="trace">
+    @if (loading() && !trace()) {
+      <p class="muted">{{ w.loading }}</p>
+    } @else if (loadError(); as message) {
+      <p class="error" role="alert" data-testid="trace-error">{{ w.loadFailed }} {{ message }}</p>
+    } @else if (trace(); as t) {
+      <header class="page-head">
+        <a [routerLink]="['/world', t.entity.kind, t.entity.id]" data-action="back-to-entity">{{ w.back(t.entity.title) }}</a>
+      </header>
+      <h2 class="run-title">{{ w.title(shortRun(t.run_id)) }}</h2>
+
+      <dl class="facts" data-testid="trace-facts">
+        <div>
+          <dt>{{ w.status }}</dt>
+          <dd><span [class]="'pill ' + (t.status ?? 'unknown')" data-testid="attempt-status">{{ t.status ?? '—' }}</span></dd>
+        </div>
+        @if (t.started) {
+          <div><dt>{{ w.started }}</dt><dd>{{ when(t.started) }}</dd></div>
+        }
+        @if (seconds(t.seconds); as took) {
+          <div><dt>{{ w.took }}</dt><dd>{{ took }}</dd></div>
+        }
+        @if (t.seed !== null) {
+          <div><dt>{{ w.seed }}</dt><dd>{{ t.seed }}</dd></div>
+        }
+        @if (t.attempts.length > 1) {
+          <div>
+            <dt><label for="attempt-pick">{{ w.attempt }}</label></dt>
+            <dd>
+              <select id="attempt-pick" data-testid="attempt-pick" (change)="pickAttempt($any($event.target).value)">
+                @for (a of t.attempts; track a.attempt_id) {
+                  <option [value]="a.attempt_id" [selected]="a.attempt_id === t.attempt_id">{{ a.started ? when(a.started) : shortRun(a.attempt_id) }} · {{ a.status ?? '—' }}</option>
+                }
+              </select>
+            </dd>
+          </div>
+        }
+      </dl>
+      @if (t.problem) {
+        <p class="error" role="alert">{{ w.problem }} {{ t.problem }}</p>
+      }
+      @if (t.error) {
+        <p class="error" role="alert" data-testid="attempt-error">{{ t.error }}</p>
+      }
+
+      @if (t.stages.length === 0) {
+        <p class="muted">{{ w.noStages }}</p>
+      } @else {
+        <ol class="strip" [attr.aria-label]="w.filmstrip" data-testid="filmstrip">
+          @for (s of t.stages; track s.folder ?? s.id) {
+            <li class="col" [class.is-selected]="isSelected(s)" [class]="'col status-' + s.status" [attr.data-stage]="folder(s)" [attr.data-status]="s.status">
+              <button type="button" class="col-head" [attr.aria-expanded]="isSelected(s)" [attr.aria-label]="w.open(title(s))" (click)="openStage(s)">
+                <span class="col-title">{{ title(s) }}</span>
+                <span [class]="'pill ' + s.status">{{ w.statuses[s.status] }}</span>
+              </button>
+              <div class="tiles">
+                @for (f of files(s); track f.candidate) {
+                  <button type="button" class="tile" [class.is-picked]="isPicked(f)" [attr.data-file]="f.name" [attr.aria-pressed]="isPicked(f)" [attr.aria-label]="name(f)" (click)="pick(s, f)">
+                    @if (f.kind === 'image' && !fileFailed(f.url)) {
+                      <img [src]="f.url" alt="" loading="lazy" (error)="imageFailed(f.url)" />
+                    } @else if (f.kind === 'model') {
+                      <span class="tile-text">{{ w.model }}</span>
+                    } @else {
+                      <span class="tile-text">{{ w.missing }}</span>
+                    }
+                    @if (chosenSlot(f); as slot) {
+                      <span class="tag">{{ w.chosenTag }}</span>
+                    }
+                  </button>
+                } @empty {
+                  <p class="hint">{{ w.noOutputs }}</p>
+                }
+              </div>
+              <p class="col-meta">
+                @if (s.reused) {
+                  <span class="pill" [attr.title]="s.reused_from ? w.reusedFrom(s.reused_from) : null">{{ w.reused }}</span>
+                }
+                @if (seconds(s.seconds); as took) {
+                  <span data-testid="stage-time">{{ took }}</span>
+                }
+                @if (outcome(s); as o) {
+                  <span [class]="'pill ' + o" [attr.data-verdict]="o">{{ w.gate(o) }}</span>
+                }
+              </p>
+              @if (s.error) {
+                <p class="col-error" role="alert">{{ s.error }}</p>
+              }
+            </li>
+          }
+        </ol>
+
+        @if (picked(); as p) {
+          <section class="panel compare" data-panel="compare" aria-live="polite">
+            <h3>{{ w.compare }}</h3>
+            <p class="hint">{{ w.compareHelp }}</p>
+            <div class="pair">
+              <figure>
+                <figcaption>{{ w.thisFile }}: {{ name(p.file) }}</figcaption>
+                <div [class.frame]="p.file.kind !== 'model'">
+                  @if (p.file.kind === 'image' && !fileFailed(p.file.url)) {
+                    <img [src]="p.file.url" [alt]="w.thisFile" (error)="imageFailed(p.file.url)" data-testid="compare-this" />
+                  } @else if (p.file.kind === 'model') {
+                    <app-model-viewer [url]="p.file.url" [name]="name(p.file)" data-testid="compare-this-viewer" />
+                  } @else {
+                    <p class="tile-text">{{ w.model }}: {{ name(p.file) }} <a [href]="p.file.url" download>{{ w.download }}</a></p>
+                  }
+                </div>
+              </figure>
+              <figure>
+                <figcaption>{{ w.chosenNow }}: {{ slotLabel(p.slot) }}</figcaption>
+                <div [class.frame]="!current()?.candidate?.endsWith('.glb')">
+                  @if (currentUrl(); as url) {
+                    @if (current()!.candidate.endsWith('.glb')) {
+                      <app-model-viewer [url]="url" [name]="base(current()!.candidate)" data-testid="compare-current-viewer" />
+                    } @else if (!fileFailed(url)) {
+                      <img [src]="url" [alt]="w.chosenNow" (error)="imageFailed(url)" data-testid="compare-current" />
+                    } @else {
+                      <p class="tile-text">{{ w.missing }}</p>
+                    }
+                  } @else {
+                    <p class="tile-text" data-testid="compare-none">{{ w.nothingChosen }}</p>
+                  }
+                </div>
+              </figure>
+            </div>
+            <div class="actions">
+              @if (slotsFor(p.file).length > 1) {
+                <label>
+                  {{ w.slot }}
+                  <select data-testid="slot-pick" (change)="setSlot($any($event.target).value)">
+                    @for (s of slotsFor(p.file); track s) {
+                      <option [value]="s" [selected]="s === p.slot">{{ slotLabel(s) }}</option>
+                    }
+                  </select>
+                </label>
+              }
+              @if (alreadyChosen(); as slot) {
+                <span data-testid="already-chosen">{{ w.isChosen(slotLabel(slot)) }}</span>
+              } @else {
+                <button mat-flat-button type="button" (click)="useThis()" [disabled]="choosing()" data-action="use-this">{{ choosing() ? w.choosing : w.useThis }}</button>
+              }
+              <button mat-button type="button" (click)="picked.set(null)">{{ w.close }}</button>
+            </div>
+            @if (chooseError(); as message) {
+              <p class="error" role="alert">{{ message }}</p>
+            }
+          </section>
+        }
+
+        @if (selected(); as s) {
+          <section class="panel detail" data-panel="stage-detail" [attr.data-stage]="folder(s)">
+            <h3>{{ title(s) }} <span [class]="'pill ' + s.status">{{ w.statuses[s.status] }}</span></h3>
+            @if (s.error) {
+              <p class="error" role="alert" data-testid="stage-error"><strong>{{ w.error }}:</strong> {{ s.error }}</p>
+            }
+
+            <h4>{{ w.outputs }}</h4>
+            <div class="outputs">
+              @for (f of files(s); track f.candidate) {
+                <figure [style.width]="f.kind === 'model' && isPicked(f) ? 'min(34rem, 100%)' : null">
+                  @if (f.kind === 'image' && !fileFailed(f.url)) {
+                    <img [src]="f.url" [alt]="name(f)" loading="lazy" (error)="imageFailed(f.url)" />
+                  } @else if (f.kind === 'model' && isPicked(f)) {
+                    <app-model-viewer [url]="f.url" [name]="name(f)" data-testid="detail-viewer" />
+                  } @else if (f.kind === 'model') {
+                    <div class="frame"><button mat-stroked-button type="button" (click)="pick(s, f)" data-action="view-3d">{{ w.view3d }}</button></div>
+                  } @else {
+                    <div class="frame"><p class="tile-text">{{ w.missing }}</p></div>
+                  }
+                  <figcaption>
+                    {{ name(f) }}
+                    @if (isCandidate(f)) { <span class="pill">{{ w.candidate }}</span> }
+                    @if (chosenSlot(f); as slot) { <span class="pill">{{ w.chosenTag }}: {{ slotLabel(slot) }}</span> }
+                    <a [href]="f.url" download>{{ w.download }}</a>
+                  </figcaption>
+                </figure>
+              } @empty {
+                <p class="hint">{{ w.noOutputs }}</p>
+              }
+            </div>
+            @if (s.files.length > files(s).length) {
+              <p class="hint">{{ w.otherFiles }}:
+                @for (f of s.files; track f.candidate) {
+                  @if (f.kind === 'other') { <a [href]="f.url" target="_blank" rel="noopener">{{ f.name }}</a>{{ ' ' }} }
+                }
+              </p>
+            }
+
+            <h4>{{ w.prompt }}</h4>
+            @if (s.prompt) {
+              <app-prompt-view [parts]="s.prompt_parts" [text]="s.prompt" [recordTitle]="trace()?.entity?.title ?? null" testid="stage-prompt" />
+              @if (s.negative) {
+                <h4>{{ w.negative }}</h4>
+                <app-prompt-view [parts]="s.negative_parts" [text]="s.negative" testid="stage-negative" />
+              }
+            } @else {
+              <p class="hint">{{ w.noPrompt }}</p>
+            }
+
+            <h4>{{ w.context }}</h4>
+            @if (entries(s.params).length || entries(s.reads).length) {
+              <table class="kv" data-testid="stage-context">
+                @for (e of entries(s.params); track e[0]) {
+                  <tr><th scope="row">{{ e[0] }}</th><td>{{ show(e[1]) }}</td></tr>
+                }
+                @for (e of entries(s.reads); track e[0]) {
+                  <tr><th scope="row">{{ e[0] }}</th><td>{{ show(e[1]) }}</td></tr>
+                }
+              </table>
+            } @else {
+              <p class="hint">—</p>
+            }
+
+            <h4>{{ w.inputs }}</h4>
+            @if (s.inputs.length) {
+              <table class="kv" data-testid="stage-inputs">
+                @for (i of s.inputs; track i.name) {
+                  <tr><th scope="row">{{ i.name }}</th><td>{{ i.from }} <span class="hash">{{ i.sha256 }}</span></td></tr>
+                }
+              </table>
+            } @else {
+              <p class="hint">{{ w.noInputs }}</p>
+            }
+
+            <h4>{{ w.adapter }}</h4>
+            @if (entries(s.adapter).length) {
+              <table class="kv" data-testid="stage-adapter">
+                @for (e of entries(s.adapter); track e[0]) {
+                  <tr><th scope="row">{{ e[0] }}</th><td>{{ e[1] }}</td></tr>
+                }
+              </table>
+            } @else {
+              <p class="hint">{{ w.noAdapter }}</p>
+            }
+
+            <h4>{{ w.timing }}</h4>
+            <table class="kv" data-testid="stage-timing">
+              <tr><th scope="row">{{ w.started }}</th><td>{{ s.started ? when(s.started) : '—' }}</td></tr>
+              <tr><th scope="row">{{ w.took }}</th><td>{{ seconds(s.seconds) ?? '—' }}</td></tr>
+              @if (s.times) {
+                <tr><th scope="row"></th><td class="hint">{{ s.times }}</td></tr>
+              }
+              @if (s.seed !== null) {
+                <tr><th scope="row">{{ w.stageSeed }}</th><td>{{ s.seed }}</td></tr>
+              }
+              @if (s.key) {
+                <tr><th scope="row">{{ w.cacheKey }}</th><td class="hash">{{ s.key }}</td></tr>
+              }
+            </table>
+
+            <h4>{{ w.gates }}</h4>
+            @for (g of s.gates; track $index) {
+              <div class="gate" data-testid="stage-gate">
+                <p>
+                  @if (g.outcome) { <span [class]="'pill ' + g.outcome">{{ w.gate(g.outcome) }}</span> }
+                  @if (g.file) { <span class="hint">{{ g.file }}</span> }
+                </p>
+                @if (g.reasons.length) {
+                  <p><strong>{{ w.reasons }}:</strong> {{ g.reasons.join('; ') }}</p>
+                }
+                @if (g.measures.length) {
+                  <table class="kv">
+                    <thead><tr><th scope="col">{{ w.measure }}</th><th scope="col">{{ w.value }}</th></tr></thead>
+                    @for (m of g.measures; track m.name) {
+                      <tr><th scope="row">{{ m.name }}</th><td>{{ m.value }}</td></tr>
+                    }
+                    @for (m of g.limits; track m.name) {
+                      <tr><th scope="row">{{ w.limit }}: {{ m.name }}</th><td>{{ m.value }}</td></tr>
+                    }
+                  </table>
+                }
+              </div>
+            } @empty {
+              <p class="hint">{{ w.noGate }}</p>
+            }
+          </section>
+        }
+      }
+    }
+  </section>
+</app-world-gate>

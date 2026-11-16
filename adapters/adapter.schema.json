@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Adapter entries",
+  "description": "The adapter keys of a machine config, and the files under adapters/ that hold entries to copy into one. pipeline/adapter_config.py validates the same rules and more: which {placeholders} each kind and each field may use, that ids are unique and that defaults name a configured adapter of their kind. Other machine config keys are described in docs/machine_settings.md.",
+  "type": "object",
+  "properties": {
+    "adapters": {"type": "array", "items": {"$ref": "#/$defs/entry"}},
+    "defaults": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/kind"},
+      "additionalProperties": {"$ref": "#/$defs/id"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$"},
+    "kind": {"enum": ["text", "image", "image-to-mesh", "material", "review", "rig", "motion", "rules", "render", "measure"]},
+    "text": {"type": "string", "minLength": 1, "maxLength": 4096, "pattern": "\\S"},
+    "entry": {
+      "type": "object",
+      "required": ["id", "kind", "argv", "sandbox", "licence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id", "description": "What a pipeline stage, a job or an API request names to choose this adapter."},
+        "kind": {"$ref": "#/$defs/kind", "description": "What the adapter makes; docs/adapters.md lists the placeholders and outputs of each kind."},
+        "description": {"type": "string", "maxLength": 1000},
+        "argv": {
+          "description": "The program and its arguments, one string each; never a shell line. argv[0], env values and cwd may use only {python} and {repo}; the other arguments may also use the run's placeholders for the kind ({prompt}, {seed}, {image}, {mesh}, {rig}, {output}, {out_dir}, {params.NAME} and so on). Write {{ and }} for literal braces.",
+          "type": "array", "minItems": 1, "maxItems": 128,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "env": {
+          "type": "object",
+          "propertyNames": {"pattern": "^[A-Z_][A-Z0-9_]*$"},
+          "additionalProperties": {"type": "string", "maxLength": 4096}
+        },
+        "cwd": {"$ref": "#/$defs/text"},
+        "requires": {
+          "type": "array",
+          "items": {"enum": ["apple_silicon", "cuda", "cpu", "blender", "network_denied", "network_loopback_only"]}
+        },
+        "sandbox": {
+          "type": "object",
+          "required": ["network"],
+          "additionalProperties": false,
+          "properties": {"network": {"enum": ["deny", "loopback", "allow"]}}
+        },
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "gpu": {"type": "boolean", "description": "Hold the machine-wide GPU lock while it runs."},
+        "model": {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "\\S"},
+            "weights": {"$ref": "#/$defs/text", "description": "A file or folder whose hash joins the model identity."}
+          }
+        },
+        "licence": {"type": "string", "minLength": 1, "maxLength": 2000, "pattern": "\\S"}
+      }
+    }
+  }
+}

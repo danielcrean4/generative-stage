@@ -1,0 +1,194 @@
+{
+ "name": "wheeled",
+ "joints": {
+  "root": {
+   "parent": null,
+   "offset": [
+    0,
+    0,
+    0
+   ]
+  },
+  "wheel_l": {
+   "parent": "root",
+   "offset": [
+    0.25,
+    0.19,
+    0
+   ]
+  },
+  "wheel_r": {
+   "parent": "root",
+   "offset": [
+    -0.25,
+    0.19,
+    0
+   ]
+  },
+  "body": {
+   "parent": "root",
+   "offset": [
+    0,
+    0.42,
+    0
+   ],
+   "limits": {
+    "x": [
+     -1.2,
+     1.2
+    ],
+    "y": [
+     -0.8,
+     0.8
+    ]
+   }
+  },
+  "head": {
+   "parent": "body",
+   "offset": [
+    0,
+    0.45,
+    0
+   ],
+   "limits": {
+    "x": [
+     -0.8,
+     0.8
+    ],
+    "y": [
+     -1.2,
+     1.2
+    ]
+   }
+  },
+  "shoulder_r": {
+   "parent": "body",
+   "offset": [
+    -0.28,
+    0.336,
+    0
+   ],
+   "limits": {
+    "x": [
+     -3.0,
+     1.5
+    ],
+    "z": [
+     -1.6,
+     1.6
+    ]
+   }
+  },
+  "elbow_r": {
+   "parent": "shoulder_r",
+   "offset": [
+    -0.07,
+    -0.17,
+    0.02
+   ],
+   "limits": {
+    "x": [
+     -2.4,
+     0.2
+    ]
+   }
+  },
+  "wrist_r": {
+   "parent": "elbow_r",
+   "offset": [
+    -0.02,
+    -0.16,
+    0.04
+   ]
+  },
+  "shoulder_l": {
+   "parent": "body",
+   "offset": [
+    0.28,
+    0.336,
+    0
+   ],
+   "limits": {
+    "x": [
+     -3.0,
+     1.5
+    ],
+    "z": [
+     -1.6,
+     1.6
+    ]
+   }
+  },
+  "elbow_l": {
+   "parent": "shoulder_l",
+   "offset": [
+    0.07,
+    -0.17,
+    0.02
+   ],
+   "limits": {
+    "x": [
+     -2.4,
+     0.2
+    ]
+   }
+  },
+  "wrist_l": {
+   "parent": "elbow_l",
+   "offset": [
+    0.02,
+    -0.16,
+    0.04
+   ]
+  }
+ },
+ "sites": {
+  "hand_r": {
+   "parent": "wrist_r",
+   "offset": [
+    0,
+    -0.08,
+    0
+   ]
+  },
+  "hand_l": {
+   "parent": "wrist_l",
+   "offset": [
+    0,
+    -0.08,
+    0
+   ]
+  },
+  "contact_l": {
+   "parent": "root",
+   "offset": [
+    0.25,
+    0,
+    0
+   ]
+  },
+  "contact_r": {
+   "parent": "root",
+   "offset": [
+    -0.25,
+    0,
+    0
+   ]
+  }
+ },
+ "roles": {
+  "root": "root",
+  "wheel_l": "wheel_l",
+  "wheel_r": "wheel_r",
+  "body": "body",
+  "head": "head",
+  "shoulder_r": "shoulder_r",
+  "elbow_r": "elbow_r",
+  "wrist_r": "wrist_r",
+  "shoulder_l": "shoulder_l",
+  "elbow_l": "elbow_l",
+  "wrist_l": "wrist_l",
+  "hand_r": "hand_r",
+  "hand_l": "hand_l"
+ }
+}

@@ -1,0 +1,86 @@
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+:host {
+  display: block;
+  min-width: 0;
+}
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+.crumbs li:not(:last-child)::after {
+  content: '/';
+  margin-left: 0.25rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+.crumbs .folder {
+  color: var(--mat-sys-on-surface-variant);
+}
+.eyebrow {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 0.25rem;
+}
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 1rem;
+}
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 16rem;
+  gap: 2rem;
+  align-items: start;
+}
+.outline {
+  position: sticky;
+  top: 0;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  border-left: 1px solid var(--mat-sys-outline-variant);
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+.outline h2 {
+  font-size: 0.95rem;
+  margin: 0 0 0.5rem;
+}
+.outline ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.outline li {
+  margin: 0.2rem 0;
+}
+a:focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+@media (max-width: 1000px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .outline {
+    position: static;
+    order: -1;
+    border-left: 0;
+    padding-left: 0;
+  }
+}

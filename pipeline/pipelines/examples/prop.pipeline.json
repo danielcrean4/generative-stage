@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "id": "prop",
+  "name": "Props from a concept image",
+  "kind": "prop",
+  "capture": {
+    "background": {
+      "method": "near_white",
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "tolerance": 236,
+      "words": "plain white background"
+    },
+    "framing": {
+      "words": "single object, whole object in frame, even light, no cast shadow"
+    },
+    "view": {
+      "words": "three-quarter view",
+      "camera": {
+        "yaw": [
+          -30,
+          30,
+          15
+        ],
+        "elevation": [
+          -30,
+          0,
+          10
+        ]
+      }
+    }
+  },
+  "stages": [
+    {
+      "id": "concept",
+      "label": "Concept image",
+      "tool": "concept",
+      "inputs": {},
+      "reads": [
+        "capture",
+        "style.prompt",
+        "subject",
+        "motif"
+      ],
+      "params": {
+        "width": 512,
+        "height": 512
+      },
+      "outputs": [
+        "image.png"
+      ]
+    },
+    {
+      "id": "tidy_image",
+      "label": "Tidy the image",
+      "tool": "normalize_image",
+      "inputs": {
+        "image": "concept/image.png"
+      },
+      "reads": [
+        "capture.background"
+      ],
+      "params": {
+        "canvas_size": 512,
+        "margin": 32,
+        "output_mode": "rgba"
+      },
+      "outputs": [
+        "image.png"
+      ]
+    },
+    {
+      "id": "matte",
+      "label": "Find the subject",
+      "tool": "matte",
+      "inputs": {
+        "image": "tidy_image/image.png"
+      },
+      "reads": [
+        "capture.background"
+      ],
+      "params": {},
+      "gate": {
+        "min_largest_share": 0.95,
+        "min_coverage": 0.05,
+        "max_coverage": 0.9,
+        "allow_border": false
+      },
+      "outputs": [
+        "matte.png",
+        "matte.json"
+      ]
+    },
+    {
+      "id": "mesh",
+      "label": "Image to mesh",
+      "tool": "mesh",
+      "inputs": {
+        "image": "tidy_image/image.png"
+      },
+      "reads": [],
+      "params": {
+        "steps": 50,
+        "depth": 8
+      },
+      "outputs": [
+        "mesh.glb"
+      ]
+    },
+    {
+      "id": "clean_mesh",
+      "label": "Clean, orient and size the mesh",
+      "tool": "normalize_mesh",
+      "inputs": {
+        "mesh": "mesh/mesh.glb"
+      },
+      "reads": [
+        "contract"
+      ],
+      "params": {
+        "weld_distance_share": 1e-05,
+        "small_piece_area_share": 0.01,
+        "orientation": {
+          "view": {
+            "drop_axis": 2,
+            "transpose": false,
+            "flip_x": false,
+            "flip_y": true
+          }
+        }
+      },
+      "outputs": [
+        "mesh.glb"
+      ]
+    },
+    {
+      "id": "decimate",
+      "label": "Reduce to the face budget",
+      "tool": "decimate_mesh",
+      "inputs": {
+        "mesh": "clean_mesh/mesh.glb"
+      },
+      "reads": [
+        "contract"
+      ],
+      "params": {
+        "preserve_topology": true
+      },
+      "outputs": [
+        "mesh.glb"
+      ]
+    },
+    {
+      "id": "shape_gate",
+      "label": "Shape gate",
+      "tool": "mesh_gates",
+      "inputs": {
+        "mesh": "decimate/mesh.glb",
+        "image": "tidy_image/image.png"
+      },
+      "reads": [
+        "capture.background",
+        "capture.view",
+        "contract"
+      ],
+      "params": {},
+      "gate": {
+        "profile": "v2",
+        "thin": false,
+        "min_silhouette_iou": 0.6,
+        "max_deficit": 0.15,
+        "max_excess": 0.15,
+        "max_aspect_error": 0.15,
+        "min_depth_ratio": 0.25,
+        "max_thin_sheet_share": 0.2,
+        "max_pieces": 1,
+        "review_margin": 0.05,
+        "orientation_margin": 0.1,
+        "search_seconds": 10
+      },
+      "retry": {
+        "on": [
+          "fail"
+        ],
+        "restart_at": "mesh",
+        "max": 2,
+        "seed_step": 1
+      },
+      "outputs": [
+        "mesh-validation.json"
+      ]
+    }
+  ],
+  "choices": {
+    "style": {
+      "label": "Style",
+      "options": [
+        "clay",
+        "vinyl_toy"
+      ],
+      "default": "clay"
+    },
+    "motif": {
+      "label": "Motif",
+      "options": [
+        "repair_shop",
+        "plain"
+      ],
+      "default": "repair_shop"
+    },
+    "seed": {
+      "label": "Seed",
+      "min": 0,
+      "max": 4294967295,
+      "default": 1
+    },
+    "candidates": {
+      "label": "Candidates",
+      "min": 1,
+      "max": 4,
+      "default": 1
+    }
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "cabinet": {
+    "box": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "silhouette_iou"
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [
+        "aspect_error"
+      ],
+      "verdict": "review"
+    },
+    "cut_33": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "silhouette_iou"
+      ],
+      "verdict": "fail"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "A left-right mirror of a left-right symmetric subject is the same shape, and the view search tries every flip anyway.",
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "orientation_gain"
+      ],
+      "verdict": "fail"
+    },
+    "original": {
+      "decided_by": [],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "depth_ratio",
+        "thin_sheet_share"
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "Every measure is a ratio or share of the outline, so a uniform scale changes none of them; the normaliser rescales before the real gate.",
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [
+        "deficit",
+        "pieces"
+      ],
+      "verdict": "review"
+    },
+    "subdivided": {
+      "decided_by": [
+        "faces"
+      ],
+      "verdict": "fail"
+    }
+  },
+  "head": {
+    "box": {
+      "decided_by": [
+        "aspect_error",
+        "excess"
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [
+        "aspect_error",
+        "deficit"
+      ],
+      "verdict": "review"
+    },
+    "cut_33": {
+      "decided_by": [
+        "aspect_error",
+        "deficit"
+      ],
+      "verdict": "fail"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "A left-right mirror of a left-right symmetric subject is the same shape, and the view search tries every flip anyway.",
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "orientation_gain",
+        "silhouette_iou"
+      ],
+      "verdict": "fail"
+    },
+    "original": {
+      "decided_by": [],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "depth_ratio"
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "Every measure is a ratio or share of the outline, so a uniform scale changes none of them; the normaliser rescales before the real gate.",
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [
+        "deficit",
+        "pieces"
+      ],
+      "verdict": "fail"
+    },
+    "subdivided": {
+      "decided_by": [
+        "faces"
+      ],
+      "verdict": "fail"
+    }
+  },
+  "tool": {
+    "box": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "silhouette_iou"
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [
+        "aspect_error",
+        "deficit"
+      ],
+      "verdict": "review"
+    },
+    "cut_33": {
+      "decided_by": [
+        "deficit"
+      ],
+      "verdict": "review"
+    },
+    "mirrored": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "silhouette_iou"
+      ],
+      "verdict": "fail"
+    },
+    "on_side": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "orientation_gain"
+      ],
+      "verdict": "fail"
+    },
+    "original": {
+      "decided_by": [],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "depth_ratio",
+        "thin_sheet_share"
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "Scale is not measured by the gate (the outline is fitted to the subject); the normaliser sets the size, so this is expected to pass at this slice.",
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [
+        "aspect_error",
+        "pieces"
+      ],
+      "verdict": "review"
+    },
+    "subdivided": {
+      "decided_by": [
+        "faces"
+      ],
+      "verdict": "fail"
+    }
+  }
+}

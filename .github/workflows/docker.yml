@@ -1,0 +1,32 @@
+name: Docker (image, compose demo, Linux checks)
+
+# Manual only: Actions minutes can cost money.
+# To run it on every change, add the triggers (see ci.yml).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image
+        run: docker build -t generative-stage:ci .
+
+      - name: Compose demo and smoke test
+        env:
+          GENSTAGE_IMAGE: generative-stage:ci
+        run: |
+          docker compose up -d --no-build
+          trap 'docker compose logs; docker compose down -v' EXIT
+          python3 scripts/smoke.py http://127.0.0.1:4280 --folder /data/smoke --wait 90
+
+      - name: Linux checks inside the image (pipeline and server)
+        run: |
+          docker build --target test -t generative-stage:ci-test .
+          docker run --rm --security-opt seccomp=unconfined generative-stage:ci-test

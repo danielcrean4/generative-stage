@@ -1,0 +1,107 @@
+<app-world-gate>
+  @if (kind(); as k) {
+    @if (editor(); as ed) {
+      <section class="world-page" data-page="entity" [attr.data-kind]="k.id">
+        <header class="page-head">
+          <h2>{{ ed.entity()?.title ?? w.newTitle(k.label) }}</h2>
+          <a [routerLink]="['/world', k.id]">{{ w.back(k.plural_label) }}</a>
+          @if (ed.entity(); as entity) {
+            <a [routerLink]="['/world', k.id, entity.id]" data-action="to-profile">{{ w.toProfile }}</a>
+          }
+        </header>
+
+        @if (ed.loading()) {
+          <p class="muted">{{ w.loading }}</p>
+        } @else if (ed.loadError(); as e) {
+          <p class="error" role="alert">{{ w.loadFailed(k.label) }} {{ e.message }}</p>
+        } @else {
+          @if (ed.entity(); as entity) {
+            <p class="muted meta">{{ w.revisionLine(entity.revision, when(entity.updated_at)) }}</p>
+          }
+
+          <div class="layout">
+            <div class="main">
+              @if (ed.conflict(); as c) {
+                <div class="banner warn" role="alert" data-banner="conflict">
+                  <p><strong>{{ w.conflictTitle }}</strong></p>
+                  <p>{{ w.conflictBody(c.latest?.revision ?? null) }}</p>
+                  <div class="actions">
+                    <button mat-flat-button (click)="ed.reloadAfterConflict()">{{ w.conflictReload }}</button>
+                    <button mat-button (click)="ed.keepEditing()">{{ w.conflictKeep }}</button>
+                  </div>
+                </div>
+              }
+
+              @if (ed.viewing(); as v) {
+                <div class="banner" data-banner="viewing">
+                  <p>{{ w.viewingBanner(v.revision, when(v.created_at)) }}</p>
+                  <div class="actions">
+                    <button mat-stroked-button (click)="ed.closeView()">{{ w.viewingBack }}</button>
+                    @if (!ed.archived()) {
+                      <button mat-flat-button (click)="revert(ed, v)">{{ w.viewingRevert }}</button>
+                    }
+                  </div>
+                </div>
+              } @else if (ed.archived()) {
+                <div class="banner" data-banner="archived">
+                  <p>{{ w.archivedBanner }}</p>
+                  <div class="actions">
+                    <button mat-flat-button (click)="restore(ed)" [disabled]="ed.saving()">{{ w.restore }}</button>
+                  </div>
+                </div>
+              }
+
+              @if (ed.problem().general; as message) {
+                <p class="error" role="alert" data-testid="general-error">{{ message }}</p>
+              }
+
+              <app-schema-form
+                [fields]="ed.fields()"
+                [values]="ed.shownValues()"
+                [errors]="ed.problem().errors.byPointer"
+                [readonly]="ed.readonly()"
+                (valueChange)="edit(ed, $event)"
+              />
+
+              @if (!ed.readonly()) {
+                <mat-form-field appearance="outline" class="wide" subscriptSizing="dynamic">
+                  <mat-label>{{ w.noteLabel }}</mat-label>
+                  <input matInput name="note" maxlength="500" [value]="ed.note()" (input)="setNote(ed, $event)" />
+                  <mat-hint>{{ w.noteHint }}</mat-hint>
+                </mat-form-field>
+                <div class="actions">
+                  <button mat-flat-button (click)="save(ed)" [disabled]="ed.saving() || (!ed.isNew() && !ed.dirty())" data-action="save">
+                    {{ ed.saving() ? w.saving : ed.isNew() ? w.saveNew : w.save }}
+                  </button>
+                  @if (ed.dirty()) {
+                    <button mat-button (click)="discard(ed)">{{ w.discard }}</button>
+                  }
+                  @if (!ed.isNew()) {
+                    <button mat-button (click)="archive(ed)" [disabled]="ed.saving()" data-action="archive">{{ w.archive }}</button>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (ed.entity(); as entity) {
+              <aside class="side">
+                <app-revisions-panel
+                  [slug]="ed.slug"
+                  [entityId]="entity.id"
+                  [current]="entity.revision"
+                  [viewing]="ed.viewing()?.revision ?? null"
+                  [locked]="entity.archived"
+                  (view)="ed.view($event)"
+                  (revert)="revert(ed, $event)"
+                />
+                <app-links-panel [slug]="ed.slug" [entity]="entity" />
+              </aside>
+            }
+          </div>
+        }
+      </section>
+    }
+  } @else {
+    <p class="error" role="alert">{{ w.notFound }}</p>
+  }
+</app-world-gate>

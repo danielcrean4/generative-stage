@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://generative-stage.invalid/export/manifest.schema.json",
+  "title": "Export bundle manifest",
+  "description": "manifest.json at the root of an export bundle (format version 1). Asset paths are relative to the bundle folder.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project", "selection", "kinds", "link_types", "entities", "links"],
+  "properties": {
+    "format": {"enum": ["generative-stage-bundle", "dramatis-fabrica-bundle"], "description": "The tool writes generative-stage-bundle; dramatis-fabrica-bundle, the id from before the rename, is still read"},
+    "format_version": {"const": 1},
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug", "name"],
+      "properties": {"slug": {"type": "string", "minLength": 1}, "name": {"type": "string", "minLength": 1}}
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kinds", "tags", "since"],
+      "properties": {
+        "kinds": {"type": "array", "items": {"type": "string"}},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "since": {
+          "description": "Entity id to revision, from the earlier bundle this one is relative to; null for a full export.",
+          "type": ["object", "null"],
+          "additionalProperties": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "kinds": {"type": "array", "items": {"$ref": "#/$defs/kind"}},
+    "link_types": {"type": "array", "items": {"$ref": "#/$defs/link_type"}},
+    "entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}},
+    "links": {"type": "array", "items": {"$ref": "#/$defs/link"}},
+    "removed": {
+      "description": "Only in a changed-since bundle: ids in the earlier bundle that are now archived or gone.",
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "$defs": {
+    "kind": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "plural_label", "title_field", "brief_field", "tags_field", "icon", "schema"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "plural_label": {"type": "string"},
+        "title_field": {"type": "string"},
+        "brief_field": {"type": ["string", "null"]},
+        "tags_field": {"type": ["string", "null"]},
+        "icon": {"type": "string"},
+        "schema": {"type": "object"}
+      }
+    },
+    "link_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "inverse_label", "source_kinds", "target_kinds"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "inverse_label": {"type": "string"},
+        "source_kinds": {"type": "array", "items": {"type": "string"}},
+        "target_kinds": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "revision", "title", "data", "assets"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "title": {"type": ["string", "null"]},
+        "data": {"type": "object"},
+        "assets": {"type": "object", "propertyNames": {"pattern": "^[a-z][a-z0-9_]{0,63}$"}, "additionalProperties": {"$ref": "#/$defs/asset"}}
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "media_type", "sha256", "bytes", "provenance"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^assets/[^/]+/[^/]+/[a-z][a-z0-9_]{0,63}(\\.[a-z0-9]+)?$"},
+        "media_type": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "provenance": {
+      "description": "What made the file, as the run recorded it. Fields the run did not record are left out.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "candidate", "entity_revision", "chosen_at"],
+      "properties": {
+        "run_id": {"type": "string"},
+        "candidate": {"type": "string"},
+        "entity_revision": {"type": "integer", "minimum": 1},
+        "chosen_at": {"type": "string"},
+        "note": {"type": "string"},
+        "attempt": {"type": "string"},
+        "stage": {"type": "string"},
+        "prompt": {"type": "string"},
+        "seed": {"type": "integer"},
+        "models": {
+          "description": "Stage id to the model or adapter identity recorded for it (ids, versions and hashes only).",
+          "type": "object",
+          "additionalProperties": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean"]}}
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "source", "target"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"type": "string"},
+        "source": {"type": "string"},
+        "target": {"type": "string"}
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "gate": {
+    "profile": "v2",
+    "thin": true,
+    "min_silhouette_iou": 0.6,
+    "max_deficit": 0.15,
+    "max_excess": 0.15,
+    "max_aspect_error": 0.15,
+    "min_depth_ratio": 0.15,
+    "max_thin_sheet_share": 0.2,
+    "max_pieces": 1,
+    "review_margin": 0.05,
+    "orientation_margin": 0.1,
+    "search_seconds": 10
+  },
+  "capture": {
+    "view": {
+      "camera": {
+        "yaw": [
+          -30,
+          30,
+          15
+        ],
+        "elevation": [
+          -30,
+          0,
+          10
+        ]
+      }
+    }
+  },
+  "frame": {
+    "drop_axis": 2,
+    "transpose": false,
+    "flip_x": false,
+    "flip_y": true
+  },
+  "face_budget": 12000
+}

@@ -1,0 +1,57 @@
+<section class="docs-file">
+  <nav aria-label="Breadcrumb" class="crumbs">
+    <ol>
+      <li><a routerLink="/docs">Docs</a></li>
+      <li>
+        <a [routerLink]="['/docs', project()]">{{ projectName() }}</a>
+      </li>
+      @for (folder of folders(); track $index) {
+        <li class="folder">{{ folder }}</li>
+      }
+      <li aria-current="page">{{ doc()?.title ?? path() }}</li>
+    </ol>
+  </nav>
+
+  <h1 class="eyebrow">{{ projectName() }} docs</h1>
+
+  @if (loading()) {
+    <p class="state" role="status">Loading the doc...</p>
+  } @else if (error()) {
+    <app-run-view-problem [error]="error()" />
+    <p><a [routerLink]="['/docs', project()]">Back to the docs tree</a></p>
+  } @else if (doc(); as d) {
+    <p class="facts">
+      <code>{{ d.path }}</code>
+      @if (modified(); as m) {
+        <span>Modified {{ formatTime(m) }}</span>
+      }
+      @if (d.size !== undefined) {
+        <span>{{ formatSize(d.size) }}</span>
+      }
+    </p>
+    <div class="columns">
+      <app-docs-body
+        [project]="project()"
+        [text]="d.text"
+        [links]="d.links"
+        [fragment]="fragment()"
+        [line]="line()"
+        (outline)="outline.set($event)"
+      />
+      <nav aria-label="Outline of this doc" class="outline">
+        <h2>On this page</h2>
+        @if (outline().length === 0) {
+          <p class="muted">This doc has no headings.</p>
+        } @else {
+          <ol>
+            @for (entry of outline(); track entry.id) {
+              <li [style.padding-left.rem]="(entry.level - 1) * 0.75">
+                <a [href]="'#' + entry.id" (click)="goTo($event, entry)">{{ entry.text }}</a>
+              </li>
+            }
+          </ol>
+        }
+      </nav>
+    </div>
+  }
+</section>

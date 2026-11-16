@@ -1,0 +1,512 @@
+{
+  "cabinet": {
+    "box": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "silhouette_iou"
+      ],
+      "faces": [
+        12,
+        12
+      ],
+      "margins": {
+        "aspect_error": -0.0565,
+        "deficit": 0.0091,
+        "excess": -0.1241,
+        "silhouette_iou": 0.0045
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [
+        "aspect_error"
+      ],
+      "faces": [
+        5472,
+        5472
+      ],
+      "margins": {
+        "aspect_error": -0.0186
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "review"
+    },
+    "cut_33": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "silhouette_iou"
+      ],
+      "faces": [
+        4788,
+        4788
+      ],
+      "margins": {
+        "aspect_error": -0.1697,
+        "deficit": 0.0027,
+        "silhouette_iou": 0.0326
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "orientation_gain"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "aspect_error": -0.2088,
+        "deficit": -0.0315,
+        "excess": 0.0325,
+        "orientation_gain": -0.1479
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "original": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "depth_ratio",
+        "thin_sheet_share"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "depth_ratio": -0.1865,
+        "thin_sheet_share": -0.0725
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [],
+      "faces": [
+        10152,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        31,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "subdivided": {
+      "decided_by": [],
+      "faces": [
+        124032,
+        8000
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    }
+  },
+  "head": {
+    "box": {
+      "decided_by": [
+        "aspect_error",
+        "excess"
+      ],
+      "faces": [
+        12,
+        12
+      ],
+      "margins": {
+        "aspect_error": 0.0381,
+        "excess": -0.1469
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [
+        "aspect_error",
+        "deficit"
+      ],
+      "faces": [
+        5472,
+        5472
+      ],
+      "margins": {
+        "aspect_error": 0.0155,
+        "deficit": 0.0351
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "review"
+    },
+    "cut_33": {
+      "decided_by": [
+        "aspect_error",
+        "deficit"
+      ],
+      "faces": [
+        4788,
+        4788
+      ],
+      "margins": {
+        "aspect_error": -0.1262,
+        "deficit": -0.073
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "orientation_gain",
+        "silhouette_iou"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "aspect_error": -0.3986,
+        "deficit": -0.209,
+        "orientation_gain": -0.2616,
+        "silhouette_iou": -0.0154
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "original": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "depth_ratio"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "depth_ratio": -0.1063
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [],
+      "faces": [
+        10152,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        31,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "subdivided": {
+      "decided_by": [],
+      "faces": [
+        124032,
+        8000
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    }
+  },
+  "tool": {
+    "box": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "silhouette_iou"
+      ],
+      "faces": [
+        12,
+        12
+      ],
+      "margins": {
+        "aspect_error": 0.0168,
+        "deficit": 0.0468,
+        "excess": -0.1066,
+        "silhouette_iou": 0.0218
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [
+        "aspect_error",
+        "deficit"
+      ],
+      "faces": [
+        6605,
+        6605
+      ],
+      "margins": {
+        "aspect_error": -0.0024,
+        "deficit": 0.0207
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "review"
+    },
+    "cut_33": {
+      "decided_by": [
+        "deficit"
+      ],
+      "faces": [
+        6005,
+        6005
+      ],
+      "margins": {
+        "deficit": -0.0084
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "review"
+    },
+    "mirrored": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "excess",
+        "silhouette_iou"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "aspect_error": -0.03,
+        "deficit": -0.3005,
+        "excess": -0.1225,
+        "silhouette_iou": -0.207
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "on_side": {
+      "decided_by": [
+        "aspect_error",
+        "deficit",
+        "orientation_gain"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "aspect_error": -0.4587,
+        "deficit": -0.1874,
+        "orientation_gain": -0.2204
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "original": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "depth_ratio",
+        "thin_sheet_share"
+      ],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {
+        "depth_ratio": -0.1095,
+        "thin_sheet_share": -0.4773
+      },
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "faces": [
+        7752,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [],
+      "faces": [
+        10152,
+        7752
+      ],
+      "margins": {},
+      "pieces": [
+        31,
+        1
+      ],
+      "verdict": "pass"
+    },
+    "subdivided": {
+      "decided_by": [],
+      "faces": [
+        124032,
+        8000
+      ],
+      "margins": {},
+      "pieces": [
+        1,
+        1
+      ],
+      "verdict": "pass"
+    }
+  }
+}

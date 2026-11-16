@@ -1,0 +1,19 @@
+{
+  "id": "soft_toy",
+  "name": "Soft toy",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "icon": "{subject}, {motif}, clean softly painted game icon art, rounded toy-like forms, simple smooth shapes, gentle shading, clear silhouette"
+    },
+    "negative": "text, watermark, photograph, harsh outlines"
+  },
+  "terms": [
+    "softly painted",
+    "toy-like",
+    "rounded",
+    "gentle shading",
+    "smooth shapes"
+  ]
+}

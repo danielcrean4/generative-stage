@@ -1,0 +1,9 @@
+{
+  "orientation": null,
+  "up_axis": "+y",
+  "front_axis": "-z",
+  "weld_distance_share": 0.00001,
+  "small_piece_area_share": 0.01,
+  "target_size": 2.0,
+  "scale_axis": "largest"
+}

@@ -1,0 +1,60 @@
+<section class="attempt-view">
+  <nav aria-label="Breadcrumb">
+    <a routerLink="/runs">Runs</a> /
+    <a [routerLink]="['/runs', runId()]">{{ runId() }}</a> /
+    <span>{{ attemptId() }}</span>
+  </nav>
+  <h2>Attempt <span class="id">{{ attemptId() }}</span></h2>
+
+  @if (loading()) {
+    <p class="state" role="status">Loading attempt...</p>
+  } @else if (error()) {
+    <app-run-view-problem [error]="error()" />
+  } @else if (attempt(); as a) {
+    @if (a.error) {
+      <div class="attempt-error" role="alert">
+        <strong>This attempt failed:</strong> {{ a.error }}
+      </div>
+    }
+    @if (a.problem) {
+      <div class="attempt-error" role="alert">
+        <strong>Problem reading this attempt:</strong> {{ a.problem }}
+      </div>
+    }
+
+    <dl class="summary">
+      <dt>Status</dt>
+      <dd>
+        <span class="status" [attr.data-status]="a.status">{{ a.status ?? 'unknown' }}</span>
+      </dd>
+      <dt>Started</dt>
+      <dd>{{ formatTime(a.started) }}</dd>
+      <dt>Duration</dt>
+      <dd>{{ formatDuration(a.started, a.finished) ?? 'unknown' }}</dd>
+      <dt>Seed</dt>
+      <dd>{{ a.seed ?? 'none' }}</dd>
+    </dl>
+
+    <details class="attempt-recipe">
+      <summary>Attempt recipe (what this attempt was asked to do)</summary>
+      @if (recipeRows(a.recipe).length === 0) {
+        <p class="muted">No recipe was recorded.</p>
+      } @else {
+        <dl class="kv">
+          @for (row of recipeRows(a.recipe); track row.key) {
+            <dt>{{ row.key }}</dt>
+            <dd>{{ row.value }}</dd>
+          }
+        </dl>
+      }
+    </details>
+
+    <h3>Steps ({{ a.stages.length }})</h3>
+    @if (a.stages.length === 0) {
+      <p class="state">No steps were found for this attempt.</p>
+    }
+    @for (stage of a.stages; track stage.stage; let i = $index) {
+      <app-stage-panel [stage]="stage" [index]="i + 1" />
+    }
+  }
+</section>

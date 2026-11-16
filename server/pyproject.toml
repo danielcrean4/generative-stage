@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "generative-stage-server"
+version = "0.1.0"
+description = "Generative Stage: the world-model API, generation jobs and export bundles"
+requires-python = ">=3.12"
+dependencies = [
+    "jsonschema==4.26.0",
+    "mcp==2.3.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "pytest>=8.3.0",
+    "ruff>=0.8.0",
+    "types-jsonschema>=4.26.0.20261006",
+]
+
+[project.scripts]
+studio = "tools.studio:main"
+generative-stage-mcp = "mcp_server.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tools", "authoring", "mcp_server"]
+# The editable install also puts the repository root on the path, for the top-level `core`
+# (the world model) and `export` (export bundles) packages, which the server imports.
+dev-mode-dirs = [".", ".."]
+
+[tool.ruff]
+line-length = 100
+src = [".", ".."]  # `core` at the repository root is first-party too
+cache-dir = "/tmp/.ruff_cache"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_notes_api.py" = ["F811"]  # reuses the api and project fixtures of test_api_v1
+
+[tool.mypy]
+files = ["authoring", "tools", "mcp_server", "../core", "../export"]
+strict = true
+cache_dir = "/tmp/.mypy_cache"
+python_version = "3.12"
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "../core/tests", "../export/tests"]
+cache_dir = "/tmp/.pytest_cache"
+
+[[tool.mypy.overrides]]
+# The pipeline's modules are plain, untyped Python (the pipeline checks their own contracts); the server only reads them.
+module = ["adapter_config", "adapter_run", "host", "kit_table", "old_names", "param_gates", "param_run", "pipeline_file", "pipeline_resolve"]
+ignore_missing_imports = true
+follow_imports = "skip"

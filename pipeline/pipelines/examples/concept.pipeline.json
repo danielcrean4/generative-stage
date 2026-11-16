@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "id": "concept",
+  "name": "Concept images",
+  "kind": "concept",
+  "capture": {
+    "background": {
+      "method": "near_white",
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "tolerance": 236,
+      "words": "plain white background"
+    },
+    "framing": {
+      "words": "single subject, whole subject in frame, even light"
+    }
+  },
+  "stages": [
+    {
+      "id": "concept",
+      "label": "Concept image",
+      "tool": "concept",
+      "inputs": {},
+      "reads": [
+        "capture",
+        "style.prompt",
+        "subject",
+        "motif"
+      ],
+      "params": {
+        "width": 512,
+        "height": 512
+      },
+      "outputs": [
+        "image.png"
+      ]
+    }
+  ],
+  "choices": {
+    "style": {
+      "label": "Style",
+      "options": [
+        "painted",
+        "sketch"
+      ],
+      "default": "painted"
+    },
+    "motif": {
+      "label": "Motif",
+      "options": [
+        "plain"
+      ],
+      "default": "plain"
+    },
+    "seed": {
+      "label": "Seed",
+      "min": 0,
+      "max": 4294967295,
+      "default": 1
+    },
+    "candidates": {
+      "label": "Candidates",
+      "min": 1,
+      "max": 4,
+      "default": 1
+    }
+  }
+}

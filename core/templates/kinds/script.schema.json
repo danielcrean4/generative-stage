@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Script",
+  "description": "A short scene played in order: who speaks, what they say and how.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": {"type": "string", "title": "Name", "minLength": 1, "maxLength": 160},
+    "brief": {
+      "type": "string",
+      "title": "Brief",
+      "description": "What happens in the scene and why it matters.",
+      "maxLength": 20000
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {"type": "string", "minLength": 1, "maxLength": 60},
+      "uniqueItems": true,
+      "maxItems": 50
+    },
+    "lines": {
+      "type": "array",
+      "title": "Lines",
+      "description": "The lines in the order they are spoken.",
+      "maxItems": 500,
+      "items": {"$ref": "#/$defs/line"}
+    }
+  },
+  "$defs": {
+    "line": {
+      "x-story": {"node": "line", "text": "text", "sequence": true},
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["speaker", "text"],
+      "properties": {
+        "speaker": {
+          "type": "string",
+          "title": "Speaker",
+          "description": "The entity id of the character who speaks.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "text": {"type": "string", "title": "Line", "minLength": 1, "maxLength": 4000},
+        "direction": {
+          "type": "string",
+          "title": "Direction",
+          "description": "How the line is said or what happens as it is said.",
+          "maxLength": 1000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,169 @@
+<app-world-gate>
+  @if (kind(); as k) {
+    @if (editor(); as ed) {
+      <section class="profile" data-page="profile" [attr.data-kind]="k.id">
+        <header class="page-head">
+          <a [routerLink]="['/world', k.id]">{{ w.back(k.plural_label) }}</a>
+          <span class="spacer"></span>
+          @if (ed.entity(); as entity) {
+            <a mat-stroked-button [routerLink]="['/world', k.id, entity.id, 'edit']" data-action="edit-all">{{ w.editAll }}</a>
+          }
+        </header>
+
+        @if (ed.loading() || !ed.entity() && !ed.loadError()) {
+          <p class="muted">{{ w.loading }}</p>
+        } @else if (ed.loadError(); as e) {
+          <p class="error" role="alert">{{ w.loadFailed(k.label) }} {{ e.message }}</p>
+        } @else if (ed.entity(); as entity) {
+          <div class="columns">
+            <div class="column">
+              <section class="panel hero" data-panel="hero">
+                <div class="slot-tabs" role="tablist" [attr.aria-label]="w.slots">
+                  @for (s of slots(); track s) {
+                    <button type="button" role="tab" [attr.aria-selected]="slot() === s" [attr.data-slot]="s" (click)="pickSlot(s)">{{ label(s) }}</button>
+                  }
+                </div>
+
+                <div class="frame" [class.is-model]="shownKind() === 'model' && !shownFailed()">
+                  @if (shown(); as s) {
+                    @if (shownFailed()) {
+                      <p class="frame-text" role="alert" data-testid="file-missing">{{ w.missingFile }}</p>
+                    } @else if (shownKind() === 'image') {
+                      <img class="hero-img" [src]="s.url" [alt]="entity.title + ', ' + label(slot())" (error)="imageFailed(s.url)" data-testid="hero-image" />
+                    } @else if (shownKind() === 'model') {
+                      <app-model-viewer [url]="s.url" [name]="name(s.candidate)" />
+                      <p class="frame-text file-line"><span>{{ w.model(name(s.candidate)) }}</span> <a [href]="s.url" download data-testid="hero-file">{{ w.download }}</a></p>
+                    } @else {
+                      <p class="frame-text"><span>{{ w.otherFile(name(s.candidate)) }}</span> <a [href]="s.url" download>{{ w.download }}</a></p>
+                    }
+                  } @else {
+                    <p class="frame-text" data-testid="nothing-chosen">{{ w.nothing }}<br /><span class="hint">{{ w.nothingHelp }}</span></p>
+                    <button mat-flat-button type="button" class="frame-action" (click)="openGenerate()" [disabled]="ed.archived()" data-action="generate">{{ w.generate }}</button>
+                  }
+                </div>
+
+                @if (preview(); as p) {
+                  <div class="preview-banner" data-testid="preview-banner">
+                    <span>{{ w.preview(name(p.candidate)) }}</span>
+                    <button mat-flat-button type="button" (click)="useThis()" [disabled]="choosing() || ed.archived()" data-action="use-this">{{ choosing() ? w.choosing : w.useThis }}</button>
+                    <button mat-button type="button" (click)="preview.set(null)">{{ w.backToChosen }}</button>
+                    <a [routerLink]="['/world', k.id, entity.id, 'runs', p.runId]" [queryParams]="traceQuery(p.candidate)" data-action="preview-trace">{{ w.howMade }}</a>
+                  </div>
+                }
+                @if (chooseError(); as message) {
+                  <p class="error" role="alert">{{ message }}</p>
+                }
+
+                @if (shown()) {
+                  <button mat-stroked-button type="button" (click)="openGenerate()" [disabled]="ed.archived()" data-action="generate-again">{{ w.generateAgain }}</button>
+                }
+
+                @if (status(); as st) {
+                  <p class="status" data-testid="status-line">
+                    {{ st.text }}
+                    <a [routerLink]="['/world', k.id, entity.id, 'runs', st.runId]" [queryParams]="st.trace" data-action="open-trace">{{ w.openRun }}</a>
+                  </p>
+                  @if (st.stale) {
+                    <p class="status stale" data-testid="stale-line">{{ st.stale }}</p>
+                  }
+                }
+              </section>
+
+              @if (generating() && generator(); as g) {
+                <app-profile-generate [data]="g" [kind]="k.id" [entityId]="entity.id" [title]="entity.title" [brief]="k.brief_field ? entity.data[k.brief_field] : null" [chosenSlots]="chosenSlots()" (closed)="generating.set(false)" />
+              }
+
+              @if (k.parameters; as model) {
+                <app-parametric-panel [slug]="world.slug()!" [kind]="k.id" [model]="model" [entity]="entity" (changed)="reloadAfterParameters(entity.id, $event.fields)" />
+              }
+
+              <section class="panel" data-panel="candidates">
+                <h3>{{ w.candidatesTitle }} <span class="for-slot">{{ label(slot()) }}</span></h3>
+                <p class="hint">{{ w.candidatesHelp }}</p>
+                @if (data()?.error(); as message) {
+                  <p class="error" role="alert">{{ message }}</p>
+                }
+                @if (candidates().length === 0) {
+                  <p class="hint" data-testid="no-candidates">{{ w.noCandidates }}</p>
+                } @else {
+                  <div class="strip" data-testid="candidate-strip">
+                    @for (c of candidates(); track c.runId + c.candidate) {
+                      <button type="button" class="cand" [class.is-current]="isCurrent(c)" [class.is-preview]="isPreview(c)" [attr.data-candidate]="c.candidate" [attr.aria-label]="w.candidate(name(c.candidate), isCurrent(c))" [attr.aria-pressed]="isPreview(c)" (click)="look(c)">
+                        @if (c.kind === 'image') {
+                          <img [src]="thumb(c)" alt="" loading="lazy" />
+                        } @else {
+                          <span class="cand-file">3D</span>
+                        }
+                        @if (isCurrent(c)) {
+                          <span class="tag">{{ w.current }}</span>
+                        }
+                        @if (c.verdict; as v) {
+                          <span class="badge" [class]="'badge ' + v" [attr.title]="w.verdict(v)" [attr.data-verdict]="v">{{ v }}</span>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
+              </section>
+            </div>
+
+            <div class="column">
+              <section class="panel identity" data-panel="identity">
+                @if (ed.conflict(); as c) {
+                  <div class="banner warn" role="alert" data-banner="conflict">
+                    <p><strong>{{ w.conflictTitle }}</strong></p>
+                    <p>{{ w.conflictBody(c.latest?.revision ?? null) }}</p>
+                    <div class="actions">
+                      <button mat-flat-button (click)="ed.reloadAfterConflict()">{{ w.conflictReload }}</button>
+                      <button mat-button (click)="ed.keepEditing()">{{ w.conflictKeep }}</button>
+                    </div>
+                  </div>
+                }
+                @if (ed.archived()) {
+                  <div class="banner" data-banner="archived"><p>{{ w.archivedBanner }}</p></div>
+                }
+                <p class="kindline"><span class="chip">{{ k.label }}</span></p>
+                <app-profile-fields [editor]="ed" />
+              </section>
+
+              @if (notes(); as nd) {
+                @if (nd.pinned().length) {
+                  <section class="panel" data-panel="pinned">
+                    <h3>{{ w.pinnedTitle }}</h3>
+                    <ul class="pinned">
+                      @for (n of nd.pinned(); track n.id) {
+                        <li data-pinned-note><app-profile-note [note]="n" [data]="nd" /></li>
+                      }
+                    </ul>
+                  </section>
+                }
+                <section class="panel" data-panel="notes-wrap">
+                  <app-profile-composer [data]="nd" />
+                  @if (nd.error(); as message) {
+                    <p class="error" role="alert">{{ message }}</p>
+                  }
+                </section>
+              }
+
+              <section class="panel" data-panel="history-wrap">
+                @if (notes(); as nd) {
+                  <app-profile-stream [slug]="ed.slug" [kind]="k.id" [entityId]="entity.id" [events]="stream()" [notes]="nd" />
+                }
+              </section>
+
+              <section class="panel" data-panel="feeds-wrap">
+                <app-profile-feeds [slug]="ed.slug" [entityId]="entity.id" [runs]="data()?.runs() ?? []" />
+              </section>
+
+              <section class="panel" data-panel="related-wrap">
+                <app-profile-related [slug]="ed.slug" [entity]="entity" />
+              </section>
+            </div>
+          </div>
+        }
+      </section>
+    }
+  } @else {
+    <p class="error" role="alert">{{ w.notFound }}</p>
+  }
+</app-world-gate>

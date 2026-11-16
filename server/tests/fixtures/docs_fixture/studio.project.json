@@ -1,0 +1,6 @@
+{
+  "slug": "docs-fixture",
+  "name": "Docs Fixture",
+  "docs_roots": ["docs"],
+  "source_allowlist": ["docs"]
+}

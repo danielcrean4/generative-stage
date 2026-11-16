@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+
+# Node and Angular
+node_modules/
+ui/dist/
+ui/.angular/
+ui/out-tsc/
+ui/test-results/
+ui/playwright-report/
+npm-debug.log*
+
+# Local run folders and data
+out/
+scratch/
+.studio/
+run-pass/
+
+# Editors, OS, agent tooling
+.claude/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Installed environments
+.venv-tools/

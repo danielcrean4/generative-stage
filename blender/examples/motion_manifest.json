@@ -1,0 +1,46 @@
+{
+ "rigs": {
+  "biped": "rigs/biped.json",
+  "wheeled": "rigs/wheeled.json"
+ },
+ "clips": [
+  {
+   "rig": "biped",
+   "family": "locomotion_biped",
+   "clips": [
+    "idle",
+    "walk",
+    "run"
+   ]
+  },
+  {
+   "rig": "biped",
+   "family": "reactions",
+   "clips": [
+    "flinch",
+    "stagger",
+    "knockout",
+    "get_up"
+   ]
+  },
+  {
+   "rig": "wheeled",
+   "family": "rolling",
+   "clips": [
+    "idle",
+    "walk",
+    "run"
+   ]
+  },
+  {
+   "rig": "wheeled",
+   "family": "reactions",
+   "clips": [
+    "flinch",
+    "stagger",
+    "knockout",
+    "get_up"
+   ]
+  }
+ ]
+}

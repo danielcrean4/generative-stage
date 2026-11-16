@@ -1,0 +1,197 @@
+<article class="stage" [attr.data-recorded]="stage().recorded" [attr.aria-labelledby]="'stage-' + index()">
+  <header>
+    <h4 [id]="'stage-' + index()">Step {{ index() }}: {{ stage().stage }}</h4>
+    @if (!stage().recorded) {
+      <span class="chip warn"
+        >Not recorded: attempt.json does not list this step (it may have failed part way)</span
+      >
+    }
+    @if (stage().status) {
+      <span class="chip warn">Step status: {{ stage().status }}</span>
+    }
+    @if (stage().reused === true) {
+      <span class="chip">Reused from cache</span>
+    } @else if (stage().reused === false) {
+      <span class="chip">Ran fresh (not reused from cache)</span>
+    }
+  </header>
+
+  <dl class="kv">
+    @if (stage().cache_key) {
+      <dt>Cache key</dt>
+      <dd>{{ stage().cache_key }}</dd>
+    }
+    @if (stage().seed !== null) {
+      <dt>Seed</dt>
+      <dd>{{ stage().seed }}</dd>
+    }
+    @if (stage().seed_used !== null) {
+      <dt>Seed of the passing try</dt>
+      <dd>{{ stage().seed_used }}</dd>
+    }
+  </dl>
+
+  @if (stage().tries; as tries) {
+    <section>
+      <h5>Tries ({{ tries.length }})</h5>
+      <table>
+        <caption class="sr-only">Every try this step made</caption>
+        <thead>
+          <tr>
+            <th scope="col">Try</th>
+            <th scope="col">Seed</th>
+            <th scope="col">Result</th>
+            <th scope="col">Reasons</th>
+            <th scope="col">Report</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of tries; track t.try) {
+            <tr>
+              <th scope="row">{{ t.try }}</th>
+              <td>{{ t.seed ?? '-' }}</td>
+              <td>
+                <span class="verdict" [attr.data-verdict]="verdictOf(t.passed)">{{
+                  verdictLabel(t.passed)
+                }}</span>
+              </td>
+              <td>
+                @for (r of t.reasons; track $index) {
+                  <div class="reason">{{ r }}</div>
+                }
+              </td>
+              <td>{{ t.report ?? '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
+
+  @if (recipe().length > 0) {
+    <section>
+      <h5>Recipe (what this step was asked to do)</h5>
+      <dl class="kv">
+        @for (row of recipe(); track row.key) {
+          <dt>{{ row.key }}</dt>
+          <dd>{{ row.value }}</dd>
+        }
+      </dl>
+    </section>
+  }
+
+  @for (gate of stage().gates; track gate.file) {
+    <section class="gate" [attr.data-verdict]="verdictOf(gate.passed, gate.verdict)">
+      <h5>
+        Gate report <code>{{ gate.file }}</code>:
+        <span class="verdict" [attr.data-verdict]="verdictOf(gate.passed, gate.verdict)">{{
+          verdictLabel(gate.passed, gate.verdict)
+        }}</span>
+        @if (gate.passed === false && gate.verdict !== 'review') {
+          <span>({{ plural(gate.reasons.length, 'failure reason') }})</span>
+        }
+      </h5>
+      @if (gate.reasons.length > 0) {
+        <ul class="reasons">
+          @for (r of gate.reasons; track $index) {
+            <li class="reason">{{ r }}</li>
+          }
+        </ul>
+      }
+      @if (measureRows(gate.measures).length > 0) {
+        <h6>Measures</h6>
+        <dl class="kv">
+          @for (row of measureRows(gate.measures); track row.key) {
+            <dt>{{ row.key }}</dt>
+            <dd>{{ row.value }}</dd>
+          }
+        </dl>
+      }
+      @if (measureRows(gate.thresholds).length > 0) {
+        <h6>Thresholds the gate compared against</h6>
+        <dl class="kv">
+          @for (row of measureRows(gate.thresholds); track row.key) {
+            <dt>{{ row.key }}</dt>
+            <dd>{{ row.value }}</dd>
+          }
+        </dl>
+      }
+    </section>
+  }
+
+  <section>
+    <h5>Output files ({{ stage().files.length }})</h5>
+    @if (stage().files.length === 0) {
+      <p class="muted">This step has no files.</p>
+    }
+    <div class="files">
+      @for (f of mainFiles(); track f.name) {
+        @switch (fileKind(f)) {
+          @case ('image') {
+            <figure>
+              <a [href]="f.url" target="_blank" rel="noopener" title="Open full size in a new tab">
+                <img [src]="f.url" [alt]="alt(f)" loading="lazy" />
+              </a>
+              <figcaption>{{ f.name }} ({{ formatSize(f.size) }})</figcaption>
+            </figure>
+          }
+          @case ('model') {
+            <figure>
+              <app-model-viewer [url]="f.url" [name]="alt(f)" />
+              <figcaption>
+                {{ f.name }} ({{ formatSize(f.size) }}) -
+                <a [href]="f.url" target="_blank" rel="noopener">download</a>
+              </figcaption>
+            </figure>
+          }
+        }
+      }
+    </div>
+    <ul class="file-links">
+      @for (f of mainFiles(); track f.name) {
+        @if (fileKind(f) === 'text') {
+          <li>
+            {{ f.name }} ({{ formatSize(f.size) }})
+            <button type="button" (click)="view(f)">View here</button>
+            <a [href]="f.url" target="_blank" rel="noopener">Open in new tab</a>
+          </li>
+        } @else if (fileKind(f) === 'other') {
+          <li>
+            <a [href]="f.url" target="_blank" rel="noopener">{{ f.name }}</a> ({{ formatSize(f.size) }})
+          </li>
+        }
+      }
+    </ul>
+    @if (nestedFiles().length > 0) {
+      <details>
+        <summary>Files inside try folders ({{ nestedFiles().length }})</summary>
+        <ul class="file-links">
+          @for (f of nestedFiles(); track f.name) {
+            <li>
+              <a [href]="f.url" target="_blank" rel="noopener">{{ f.name }}</a> ({{ formatSize(f.size) }})
+              @if (fileKind(f) === 'text') {
+                <button type="button" (click)="view(f)">View here</button>
+              }
+            </li>
+          }
+        </ul>
+      </details>
+    }
+
+    @if (opened(); as o) {
+      <div class="viewer" role="region" [attr.aria-label]="'Contents of ' + o.name">
+        <div class="viewer-head">
+          <strong>{{ o.name }}</strong>
+          <button type="button" (click)="closeViewer()">Close</button>
+        </div>
+        @if (o.loading) {
+          <p role="status">Loading...</p>
+        } @else if (o.error) {
+          <p class="reason" role="alert">{{ o.error }}</p>
+        } @else {
+          <pre>{{ o.text }}</pre>
+        }
+      </div>
+    }
+  </section>
+</article>

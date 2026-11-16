@@ -1,0 +1,65 @@
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+.crumbs li:not(:last-child)::after {
+  content: '/';
+  margin-left: 0.25rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+h1 {
+  font-size: 1.4rem;
+  margin: 0 0 0.25rem;
+}
+.facts,
+.range,
+.state {
+  color: var(--mat-sys-on-surface-variant);
+}
+.blocked {
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  max-width: 45rem;
+}
+.code {
+  margin: 0;
+  padding: 0.5rem 0 0.5rem 4rem;
+  overflow-x: auto;
+  background: var(--mat-sys-surface-container-high);
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.code li {
+  padding-right: 1rem;
+  white-space: pre;
+}
+.code li::marker {
+  color: var(--mat-sys-on-surface-variant);
+}
+.code li code {
+  font-family: inherit;
+  font-size: inherit;
+}
+.code li.target {
+  background: color-mix(in srgb, var(--mat-sys-primary) 30%, transparent);
+  color: var(--mat-sys-on-surface);
+  font-weight: 600;
+  box-shadow: inset 4px 0 0 var(--mat-sys-primary);
+}
+.code:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}

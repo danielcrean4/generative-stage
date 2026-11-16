@@ -1,0 +1,8 @@
+{
+  "kind": "head",
+  "up_axis": "+y",
+  "front_axis": "+z",
+  "target_size": 1.0,
+  "scale_axis": "y",
+  "face_budget": 16000
+}

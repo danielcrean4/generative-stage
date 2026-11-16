@@ -1,0 +1,8 @@
+{"id": "vinyl_toy", "name": "Soft vinyl toy", "extends": null, "version": 1,
+ "prompt": {"templates": {"prop": "{subject}, {motif}, soft vinyl toy, smooth rounded forms",
+                          "icon": "{subject}, {motif}, flat toy-like icon",
+                          "character": "{subject}, {motif}, soft vinyl toy figure"},
+            "negative": "text, watermark"},
+ "palette": "palette.json",
+ "surface": {"posterize": 4, "roughness": 0.85},
+ "terms": ["vinyl", "toy-like"]}

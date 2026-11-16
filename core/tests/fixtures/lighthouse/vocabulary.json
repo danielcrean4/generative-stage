@@ -1,0 +1,209 @@
+{
+  "format": "generative-stage-vocabulary",
+  "format_version": 1,
+  "source": "an invented lighthouse, for the tool's own tests",
+  "types": {
+    "int": {
+      "json": "integer"
+    },
+    "bool": {
+      "json": "boolean"
+    },
+    "id": {
+      "json": "string"
+    },
+    "id_set": {
+      "json": "array",
+      "doc": "a set of ids"
+    }
+  },
+  "facts": [
+    {
+      "pattern": "errand(errand).step",
+      "type": "int",
+      "doc": "The step an errand has reached; 0 before it starts."
+    },
+    {
+      "pattern": "errand(errand).done",
+      "type": "bool"
+    },
+    {
+      "pattern": "lamp(lamp).lit",
+      "type": "bool",
+      "doc": "Whether a lamp burns."
+    },
+    {
+      "pattern": "keeper.oil",
+      "type": "int",
+      "doc": "Litres of oil the keeper carries."
+    },
+    {
+      "pattern": "keeper.place",
+      "type": "id"
+    },
+    {
+      "pattern": "keeper.seen",
+      "type": "id_set",
+      "doc": "Places the keeper has been."
+    },
+    {
+      "pattern": "tide.height",
+      "type": "int"
+    },
+    {
+      "pattern": "mark(mark)",
+      "type": "int",
+      "doc": "A numbered mark in the log book."
+    }
+  ],
+  "operators": {
+    "eq": {
+      "types": [
+        "bool",
+        "id",
+        "int"
+      ],
+      "operand": "same",
+      "text": "is"
+    },
+    "ne": {
+      "types": [
+        "bool",
+        "id",
+        "int"
+      ],
+      "operand": "same",
+      "text": "is not"
+    },
+    "gte": {
+      "types": [
+        "int"
+      ],
+      "operand": "same",
+      "text": "is at least"
+    },
+    "lt": {
+      "types": [
+        "int"
+      ],
+      "operand": "same",
+      "text": "is below"
+    },
+    "has": {
+      "types": [
+        "id_set"
+      ],
+      "operand": "member",
+      "text": "has"
+    },
+    "in": {
+      "types": [
+        "id",
+        "int"
+      ],
+      "operand": "list",
+      "text": "is one of"
+    }
+  },
+  "id_kinds": {
+    "errand": {
+      "entity_kinds": [
+        "errand"
+      ]
+    },
+    "lamp": {
+      "entity_kinds": [
+        "lamp"
+      ]
+    },
+    "mark": {
+      "doc": "Any mark name."
+    }
+  },
+  "effects": {
+    "key": "do",
+    "kinds": {
+      "set_mark": {
+        "doc": "Write a mark.",
+        "args": {
+          "mark": {
+            "type": "string",
+            "id_kind": "mark",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          }
+        },
+        "required": [
+          "mark"
+        ]
+      },
+      "light": {
+        "args": {
+          "lamp": {
+            "type": "string",
+            "id_kind": "lamp"
+          }
+        },
+        "required": [
+          "lamp"
+        ],
+        "ref": {
+          "id_kind": "lamp",
+          "id": "lamp"
+        }
+      },
+      "advance": {
+        "doc": "Move an errand to a step.",
+        "args": {
+          "errand": {
+            "type": "string",
+            "id_kind": "errand"
+          },
+          "step": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "errand",
+          "step"
+        ],
+        "ref": {
+          "id_kind": "errand",
+          "id": "errand",
+          "at": "/steps/{step}"
+        }
+      },
+      "say": {
+        "args": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    }
+  },
+  "rule_modes": {
+    "once": {
+      "doc": "The first time it holds."
+    },
+    "each": {
+      "doc": "Every time it turns true."
+    }
+  },
+  "shorthand": {
+    "keys": [
+      "after_step"
+    ],
+    "doc": "The older form: the errand's own step is at least this."
+  }
+}

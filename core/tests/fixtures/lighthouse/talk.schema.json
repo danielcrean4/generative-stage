@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "key"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "opening": {
+      "$ref": "#/$defs/line"
+    },
+    "lines": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/line"
+      }
+    }
+  },
+  "$defs": {
+    "line": {
+      "x-story": {
+        "node": "line",
+        "text": "line"
+      },
+      "type": "object",
+      "properties": {
+        "line": {
+          "type": "string"
+        },
+        "requires": {
+          "x-vocabulary": "condition",
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "replies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reply"
+          }
+        },
+        "errand": {
+          "$ref": "#/$defs/hook"
+        }
+      }
+    },
+    "reply": {
+      "x-story": {
+        "edge": "reply",
+        "text": "say",
+        "to": "goto",
+        "target": "/lines/{}"
+      },
+      "type": "object",
+      "required": [
+        "say"
+      ],
+      "properties": {
+        "say": {
+          "type": "string"
+        },
+        "goto": {
+          "type": "string"
+        },
+        "requires": {
+          "x-vocabulary": "condition",
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "x-vocabulary": "effects",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "hook": {
+      "x-story": {
+        "ref": {
+          "id_kind": "errand",
+          "id": "key",
+          "at": "/steps/{step}"
+        }
+      },
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "step": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

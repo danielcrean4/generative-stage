@@ -1,0 +1,12 @@
+{
+ "model": "biped.glb",
+ "blender": "5.2.3 LTS",
+ "rig": "biped.json",
+ "clips": [
+  "idle",
+  "walk",
+  "run",
+  "flinch"
+ ],
+ "how": "Body built from boxes and tapered limbs by build_rigged.py, one piece per joint at full weight. Clips made by build_motions.py from the procedural motion families, keyed on the armature. No model or download involved."
+}

@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "id": "head",
+  "name": "Heads from a concept bust",
+  "kind": "head",
+  "capture": {
+    "background": {
+      "method": "near_white",
+      "color": [255, 255, 255],
+      "tolerance": 236,
+      "words": "pure white background"
+    },
+    "framing": {
+      "words": "head and neck only, cropped at the collarbone with no shoulders, torso or clothing visible, no props, no text"
+    },
+    "view": {
+      "words": "facing camera directly",
+      "camera": {
+        "yaw": [-15, 15, 15],
+        "elevation": [-15, 0, 15]
+      }
+    }
+  },
+  "stages": [
+    {
+      "id": "bust",
+      "label": "Concept bust",
+      "tool": "concept",
+      "inputs": {},
+      "reads": ["capture", "style.prompt", "subject", "motif"],
+      "params": {"width": 512, "height": 512},
+      "outputs": ["image.png"]
+    },
+    {
+      "id": "crop",
+      "label": "Crop to head and neck",
+      "tool": "crop_image",
+      "inputs": {"image": "bust/image.png"},
+      "reads": ["capture.background"],
+      "params": {"keep_share": 0.72},
+      "outputs": ["image.png"]
+    },
+    {
+      "id": "matte",
+      "label": "Find the subject",
+      "tool": "matte",
+      "inputs": {"image": "crop/image.png"},
+      "reads": ["capture.background"],
+      "params": {},
+      "gate": {
+        "min_largest_share": 0.95,
+        "min_coverage": 0.05,
+        "max_coverage": 0.9,
+        "allow_border": true
+      },
+      "outputs": ["matte.png", "matte.json"]
+    },
+    {
+      "id": "mesh",
+      "label": "Image to mesh",
+      "tool": "mesh",
+      "inputs": {"image": "matte/matte.png"},
+      "reads": [],
+      "params": {"steps": 50, "depth": 8},
+      "outputs": ["mesh.glb"]
+    },
+    {
+      "id": "colour",
+      "label": "Colour the head from the bust",
+      "tool": "colour_head",
+      "inputs": {"mesh": "mesh/mesh.glb", "image": "crop/image.png"},
+      "reads": ["capture.background", "subject"],
+      "params": {
+        "working_faces": 16000,
+        "posterize": 12,
+        "seen_facing": 0.35,
+        "depth_resolution": 256,
+        "depth_tolerance": 0.03,
+        "min_seen_share": 0.08,
+        "horizontal_bias": 4.0,
+        "toon_colours": 4,
+        "broad_share": 0.12,
+        "nape_height": 0.3,
+        "temple_height": 0.5,
+        "temple_side": 0.55,
+        "ear_top": 0.62,
+        "ear_side": 0.8,
+        "hair_match": 0.35
+      },
+      "outputs": ["mesh.glb"]
+    },
+    {
+      "id": "clean_mesh",
+      "label": "Clean, orient and size the head",
+      "tool": "normalize_mesh",
+      "inputs": {"mesh": "colour/mesh.glb"},
+      "reads": ["contract"],
+      "params": {
+        "weld_distance_share": 1e-05,
+        "small_piece_area_share": 0.01,
+        "orientation": {
+          "view": {"drop_axis": 2, "transpose": false, "flip_x": false, "flip_y": true}
+        }
+      },
+      "outputs": ["mesh.glb"]
+    },
+    {
+      "id": "decimate",
+      "label": "Reduce to the face budget",
+      "tool": "decimate_mesh",
+      "inputs": {"mesh": "clean_mesh/mesh.glb"},
+      "reads": ["contract"],
+      "params": {"preserve_topology": true},
+      "outputs": ["mesh.glb"]
+    },
+    {
+      "id": "shape_gate",
+      "label": "Shape gate",
+      "tool": "mesh_gates",
+      "inputs": {"mesh": "decimate/mesh.glb", "image": "crop/image.png"},
+      "reads": ["capture.background", "capture.view", "contract"],
+      "params": {},
+      "gate": {
+        "profile": "v2",
+        "thin": false,
+        "min_silhouette_iou": 0.6,
+        "max_deficit": 0.15,
+        "max_excess": 0.15,
+        "max_aspect_error": 0.15,
+        "min_depth_ratio": 0.25,
+        "max_thin_sheet_share": 0.2,
+        "max_pieces": 1,
+        "review_margin": 0.05,
+        "orientation_margin": 0.1,
+        "search_seconds": 10
+      },
+      "outputs": ["mesh-validation.json"]
+    }
+  ],
+  "choices": {
+    "style": {"label": "Style", "options": ["vinyl_toy"], "default": "vinyl_toy"},
+    "motif": {"label": "Motif", "options": ["plain_character", "storybook"], "default": "plain_character"},
+    "hair_colour": {"label": "Hair colour", "options": ["#4d331f", "#1c1a19", "#8a5a35", "#7a3b1e", "#c9a24d", "#b4411f", "#9a9a9a"]},
+    "seed": {"label": "Seed", "min": 0, "max": 4294967295, "default": 1},
+    "candidates": {"label": "Candidates", "min": 1, "max": 4, "default": 1}
+  }
+}

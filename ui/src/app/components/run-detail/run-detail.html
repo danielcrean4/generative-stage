@@ -1,0 +1,74 @@
+<section class="run-detail">
+  <nav aria-label="Breadcrumb"><a routerLink="/runs">Runs</a> / <span>{{ runId() }}</span></nav>
+  <h2>Run <span class="id">{{ runId() }}</span></h2>
+
+  @if (loading()) {
+    <p class="state" role="status">Loading run...</p>
+  } @else if (error()) {
+    <app-run-view-problem [error]="error()" />
+  } @else if (run(); as r) {
+    <h3>Attempts, newest first</h3>
+    @if (r.attempts.length === 0) {
+      <p class="state">This run has no attempts. It only keeps the files listed below, if any.</p>
+    } @else {
+      <table>
+        <caption class="sr-only">Attempts of this run</caption>
+        <thead>
+          <tr>
+            <th scope="col">Attempt</th>
+            <th scope="col">Status</th>
+            <th scope="col">Started</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Seed</th>
+            <th scope="col">Stages</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of r.attempts; track a.attempt_id) {
+            <tr>
+              <th scope="row">
+                <a [routerLink]="['/runs', r.run_id, 'attempts', a.attempt_id]">{{ a.attempt_id }}</a>
+                @if (a.attempt_id === r.latest_attempt_id) {
+                  <span class="badge">latest</span>
+                }
+              </th>
+              <td>
+                @if (a.problem) {
+                  <span class="problem">Problem: {{ a.problem }}</span>
+                } @else {
+                  <span class="status" [attr.data-status]="a.status">{{ a.status ?? 'unknown' }}</span>
+                  @if (a.error) {
+                    <span class="problem">{{ a.error }}</span>
+                  }
+                }
+              </td>
+              <td>{{ formatTime(a.started) }}</td>
+              <td>{{ formatDuration(a.started, a.finished) ?? '-' }}</td>
+              <td>{{ a.seed ?? '-' }}</td>
+              <td>{{ a.stages.length ? a.stages.join(', ') : '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    <h3>Files kept at the run root</h3>
+    @if (r.root_files.length === 0) {
+      <p class="state">None.</p>
+    } @else {
+      <ul class="root-files">
+        @for (f of r.root_files; track f.name) {
+          <li>
+            @if (isImage(f.media_type)) {
+              <a [href]="f.url" target="_blank" rel="noopener" title="Open full size">
+                <img [src]="f.url" [alt]="'Run root file ' + f.name" loading="lazy" />
+              </a>
+            }
+            <a [href]="f.url" target="_blank" rel="noopener">{{ f.name }}</a>
+            <span class="muted">({{ formatSize(f.size) }})</span>
+          </li>
+        }
+      </ul>
+    }
+  }
+</section>

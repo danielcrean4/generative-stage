@@ -1,0 +1,18 @@
+{
+  "id": "vinyl_toy",
+  "name": "Clay vinyl toy",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "head": "{subject}, {motif}, 3D render in a simple clay vinyl-toy style with smooth stylized forms, even flat studio lighting, no harsh shadows or specular highlights"
+    },
+    "negative": "photograph, photoreal skin, hard shadows, text, watermark"
+  },
+  "terms": [
+    "clay",
+    "vinyl-toy",
+    "smooth stylized forms",
+    "flat studio lighting"
+  ]
+}

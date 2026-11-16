@@ -1,0 +1,85 @@
+<section class="runs-list">
+  <h2>Runs</h2>
+  <p class="intro">
+    Each row is one pipeline run (a folder in the runs root). Open a run to see its attempts, then
+    an attempt to see every step it took.
+  </p>
+
+  <div class="controls">
+    <label>
+      Filter by run id
+      <input type="search" [value]="filter()" (input)="filter.set($any($event.target).value)" />
+    </label>
+    <label>
+      Show the most recent
+      <select [value]="limit()" (change)="setLimit($any($event.target).value)">
+        @for (n of limits; track n) {
+          <option [value]="n" [selected]="n === limit()">{{ n }} runs</option>
+        }
+      </select>
+    </label>
+    <button type="button" (click)="load()">Reload</button>
+  </div>
+
+  @if (loading()) {
+    <p class="state" role="status">Loading runs...</p>
+  } @else if (error()) {
+    <app-run-view-problem [error]="error()" />
+  } @else if (runs().length === 0) {
+    <p class="state">The server found no runs in the runs root.</p>
+  } @else {
+    <p class="count" role="status">
+      Showing {{ visible().length }} of {{ runs().length }} loaded runs ({{ total() }} in total).
+    </p>
+    @if (visible().length === 0) {
+      <p class="state">No loaded run id contains "{{ filter() }}". Try a larger limit.</p>
+    } @else {
+      <table>
+        <caption class="sr-only">Recent runs, newest first</caption>
+        <thead>
+          <tr>
+            <th scope="col">Run id</th>
+            <th scope="col">Status</th>
+            <th scope="col">Started</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Stages present</th>
+            <th scope="col">Latest attempt</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (run of visible(); track run.run_id) {
+            <tr>
+              <th scope="row">
+                <a [routerLink]="['/runs', run.run_id]">{{ run.run_id }}</a>
+              </th>
+              <td>
+                @if (run.problem) {
+                  <span class="problem">Problem: {{ run.problem }}</span>
+                } @else if (run.status) {
+                  <span class="status" [attr.data-status]="run.status">{{ run.status }}</span>
+                  @if (run.error) {
+                    <span class="error-text">{{ run.error }}</span>
+                  }
+                } @else {
+                  <span class="muted">no attempts (icon or head run)</span>
+                }
+              </td>
+              <td>{{ run.started ? formatTime(run.started) : '-' }}</td>
+              <td>{{ formatDuration(run.started, run.finished) ?? '-' }}</td>
+              <td>{{ run.stages.length ? run.stages.join(', ') : '-' }}</td>
+              <td>
+                @if (run.latest_attempt_id) {
+                  <a [routerLink]="['/runs', run.run_id, 'attempts', run.latest_attempt_id]">{{
+                    run.latest_attempt_id
+                  }}</a>
+                } @else {
+                  -
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</section>

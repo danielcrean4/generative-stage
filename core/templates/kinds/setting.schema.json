@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Setting",
+  "description": "A place where the story happens: a town, a room, a street.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": {"type": "string", "title": "Name", "minLength": 1, "maxLength": 160},
+    "brief": {
+      "type": "string",
+      "title": "Brief",
+      "description": "What this place is like and what it is for in the story.",
+      "maxLength": 20000
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {"type": "string", "minLength": 1, "maxLength": 60},
+      "uniqueItems": true,
+      "maxItems": 50
+    },
+    "era": {"type": "string", "title": "Era or period", "maxLength": 200},
+    "atmosphere": {"type": "string", "title": "Atmosphere", "maxLength": 2000},
+    "scale": {
+      "type": "string",
+      "title": "Scale",
+      "enum": ["room", "building", "street", "district", "town", "region", "world"]
+    }
+  }
+}

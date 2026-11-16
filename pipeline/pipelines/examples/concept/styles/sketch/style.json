@@ -1,0 +1,13 @@
+{
+  "id": "sketch",
+  "name": "Pencil sketch",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "concept": "{subject}, {motif}, pencil sketch on paper, clean line work"
+    },
+    "negative": "text, watermark, colour"
+  },
+  "terms": ["pencil", "sketch", "line work"]
+}

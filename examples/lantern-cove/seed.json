@@ -1,0 +1,90 @@
+{
+  "slug": "lantern-cove",
+  "name": "Lantern Cove (example)",
+  "entities": [
+    {
+      "key": "cove",
+      "kind": "setting",
+      "data": {
+        "name": "Lantern Cove",
+        "brief": "A small fishing cove on a rocky coast. A stone lighthouse stands on the headland above a pebble beach, with a few weathered boathouses along the shore and a footpath cut into the cliff.",
+        "tags": ["coast", "village"],
+        "era": "present day",
+        "atmosphere": "Salt wind, gulls, grey light that turns gold in the evening.",
+        "scale": "town"
+      }
+    },
+    {
+      "key": "lighthouse",
+      "kind": "setting",
+      "data": {
+        "name": "The Lighthouse",
+        "brief": "A white stone tower with a narrow spiral stair, a lamp room at the top and a keeper's kitchen at the foot, with a wood stove and a table by the window.",
+        "tags": ["coast", "interior"],
+        "era": "present day",
+        "atmosphere": "Cool stone, the smell of tea and lamp oil, the sea heard through thick walls.",
+        "scale": "building"
+      }
+    },
+    {
+      "key": "ines",
+      "kind": "character",
+      "data": {
+        "name": "Ines Marlow",
+        "brief": "The keeper of the lighthouse, in her sixties, who has watched the cove for thirty years and knows every boat by its sound.",
+        "tags": ["keeper"],
+        "role": "Lighthouse keeper",
+        "appearance": "Weathered face, grey braid, a thick wool jumper under a yellow waterproof jacket, rubber boots.",
+        "voice": "Calm and dry. Says little and means all of it."
+      }
+    },
+    {
+      "key": "lantern",
+      "kind": "prop",
+      "data": {
+        "name": "Brass Signal Lantern",
+        "brief": "A hand-held brass lantern with a glass chimney and a folding carry handle, dented from years of use, kept by the lighthouse door.",
+        "tags": ["light", "metal"],
+        "material": "brass and glass",
+        "size": "hand",
+        "condition": "worn but cared for"
+      }
+    },
+    {
+      "key": "notebook",
+      "kind": "prop",
+      "data": {
+        "name": "Tide Table Notebook",
+        "brief": "A small canvas-bound notebook, swollen from damp, with tide times pencilled in every margin.",
+        "tags": ["paper"],
+        "material": "canvas and paper",
+        "size": "pocket",
+        "condition": "swollen and soft at the corners"
+      }
+    },
+    {
+      "key": "lighting-up",
+      "kind": "script",
+      "data": {
+        "name": "Lighting Up",
+        "brief": "Dusk at the lighthouse. Ines climbs to the lamp room, lights the lamp and talks to the sea, as she does every night.",
+        "tags": ["evening"],
+        "lines": [
+          {"speaker": {"entity": "ines"}, "text": "Right then. Another night.", "direction": "At the foot of the stair, pulling on her jacket."},
+          {"speaker": {"entity": "ines"}, "text": "One hundred and twelve steps. Same as yesterday.", "direction": "Out of breath at the top."},
+          {"speaker": {"entity": "ines"}, "text": "There you are. Burn steady for me.", "direction": "The lamp catches; she watches the beam sweep the cove."}
+        ]
+      }
+    }
+  ],
+  "links": [
+    {"type": "part_of", "source": "lighthouse", "target": "cove"},
+    {"type": "lives_in", "source": "ines", "target": "lighthouse"},
+    {"type": "belongs_to", "source": "lantern", "target": "ines"},
+    {"type": "belongs_to", "source": "notebook", "target": "ines"},
+    {"type": "found_in", "source": "lantern", "target": "lighthouse"}
+  ],
+  "notes": [
+    {"entity": "lantern", "text": "Brief for the first run: a brass lantern on a plain background, three-quarter view."}
+  ]
+}

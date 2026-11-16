@@ -1,0 +1,47 @@
+.level {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+:host > .level,
+:host > ul {
+  padding-left: 0;
+}
+summary {
+  cursor: pointer;
+  padding: 0.25rem 0.25rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+summary:focus-visible,
+.file:focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 1px;
+}
+.count {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--mat-sys-on-surface-variant);
+}
+.file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75rem;
+  padding: 0.2rem 0.25rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+}
+.file:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+.title {
+  color: var(--mat-sys-primary);
+}
+.path {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+  overflow-wrap: anywhere;
+}

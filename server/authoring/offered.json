@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "pipelines": [
+    {"id": "prop", "file": "examples/prop.pipeline.json", "data": "examples/prop", "sheet": "examples/finish.prop.json", "entity_kinds": ["prop"]},
+    {"id": "character", "file": "examples/character.pipeline.json", "data": "examples/character", "sheet": "examples/finish.prop.json", "entity_kinds": ["character"]},
+    {"id": "head", "file": "head.json", "data": "examples/head", "sheet": "examples/finish.head.json", "entity_kinds": ["character"]},
+    {"id": "mesh", "file": "examples/mesh.pipeline.json", "data": "examples/prop", "entity_kinds": ["prop"]},
+    {"id": "concept", "file": "examples/concept.pipeline.json", "data": "examples/concept"},
+    {"id": "icon", "file": "examples/icon.pipeline.json", "data": "examples/tracer"}
+  ]
+}

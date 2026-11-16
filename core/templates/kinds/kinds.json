@@ -1,0 +1,45 @@
+{
+  "kinds": [
+    {
+      "id": "setting",
+      "label": "Setting",
+      "plural_label": "Settings",
+      "schema": "setting.schema.json",
+      "family": "setting",
+      "title_field": "name",
+      "brief_field": "brief",
+      "icon": "landscape"
+    },
+    {
+      "id": "character",
+      "label": "Character",
+      "plural_label": "Characters",
+      "schema": "character.schema.json",
+      "family": "character",
+      "title_field": "name",
+      "brief_field": "brief",
+      "icon": "person"
+    },
+    {
+      "id": "prop",
+      "label": "Prop",
+      "plural_label": "Props",
+      "schema": "prop.schema.json",
+      "family": "prop",
+      "title_field": "name",
+      "brief_field": "brief",
+      "icon": "category"
+    },
+    {
+      "id": "script",
+      "label": "Script",
+      "plural_label": "Scripts",
+      "schema": "script.schema.json",
+      "family": "script",
+      "form": "linear",
+      "title_field": "name",
+      "brief_field": "brief",
+      "icon": "chat"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+<div class="layout">
+  <mat-toolbar color="primary" class="top-bar">
+    @if (narrow()) {
+      <button mat-button type="button" class="menu-button" aria-label="Menu" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())">Menu</button>
+    }
+    <app-top-nav></app-top-nav>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="shell-body">
+    <mat-sidenav [mode]="narrow() ? 'over' : 'side'" [opened]="!narrow() || menuOpen()" [disableClose]="!narrow()" (closedStart)="menuOpen.set(false)" (click)="narrow() && menuOpen.set(false)" class="sidenav">
+      <app-left-nav></app-left-nav>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="content">
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

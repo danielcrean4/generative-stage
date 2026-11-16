@@ -1,0 +1,14 @@
+{
+  "id": "soft_toy_night",
+  "name": "Soft toy at night (inheritance test only)",
+  "version": 1,
+  "extends": "soft_toy",
+  "prompt": {
+    "templates": {
+      "icon": "{subject}, {motif}, clean softly painted game icon art, rounded toy-like forms, simple smooth shapes, moonlit blue and silver tones, clear silhouette"
+    }
+  },
+  "terms": [
+    "moonlit"
+  ]
+}

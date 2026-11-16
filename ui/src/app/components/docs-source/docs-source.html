@@ -1,0 +1,53 @@
+<section class="docs-source">
+  <nav aria-label="Breadcrumb" class="crumbs">
+    <ol>
+      <li><a routerLink="/docs">Docs</a></li>
+      <li>
+        <a [routerLink]="['/docs', project()]">{{ project() }}</a>
+      </li>
+      <li aria-current="page">Source</li>
+    </ol>
+  </nav>
+
+  <h1>Source file</h1>
+  <p class="facts">
+    <code>{{ path() }}</code
+    >{{ line() ? ' at line ' + line() : '' }}. Read-only: change code in the repo.
+  </p>
+
+  @if (loading()) {
+    <p class="state" role="status">Loading the file...</p>
+  } @else if (blocked()) {
+    <p class="blocked" role="note">
+      <strong>{{ note }}</strong>
+      <br />
+      Either the file is in a folder the project has not listed for the docs view, or it does not
+      exist (a folder is not shown either). The project file lists the openable folders under
+      <code>source_allowlist</code>.
+    </p>
+  } @else if (error()) {
+    <app-run-view-problem [error]="error()" />
+  } @else if (window(); as w) {
+    <p class="range">
+      Lines {{ w.start }} to {{ w.end }} of {{ w.total_lines }}.
+      @if (w.truncated) {
+        The file is longer than this window.
+      }
+    </p>
+    @if (w.lines.length === 0) {
+      <p class="state">This file is empty.</p>
+    } @else {
+      <ol class="code" tabindex="0" [attr.start]="w.start" aria-label="File text with line numbers">
+        @for (row of rows(); track row.n) {
+          <li
+            [class.target]="row.target"
+            [id]="row.target ? 'ws-source-target' : null"
+            [attr.aria-current]="row.target ? 'location' : null"
+          >
+            <code>{{ row.text }}</code>
+          </li>
+        }
+      </ol>
+    }
+  }
+</section>

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "kind": "lamp",
+  "gates": [
+    {"id": "not_empty", "about": "the picture shows something", "measure": "ink_ratio", "min": 0.06, "verdict": "fail",
+     "mutant": {"about": "everything at its minimum", "row": {"name": "mutant", "shade": "drum", "theme": "modern", "material": "oak", "height_cm": 30, "base_radius_cm": 6, "has_arm": false, "colour": "#808080", "drum_radius_cm": 8}}},
+    {"id": "not_a_blob", "about": "the picture is not more than a quarter ink", "measure": "ink_ratio", "max": 0.28, "verdict": "fail",
+     "mutant": {"about": "everything at its maximum", "row": {"name": "mutant", "shade": "cone", "theme": "industrial", "material": "steel", "height_cm": 200, "base_radius_cm": 30, "has_arm": true, "arm_reach_cm": 60, "colour": "#000000", "cone_top_cm": 20, "cone_bottom_cm": 40}}},
+    {"id": "tall_enough", "about": "the tallest part reaches at least 100 px", "measure": "ink_height_px", "min": 100, "verdict": "review",
+     "mutant": {"about": "short lamp", "row": {"name": "mutant", "shade": "drum", "theme": "rustic", "material": "oak", "height_cm": 30, "base_radius_cm": 12, "has_arm": false, "colour": "#a0714f", "drum_radius_cm": 8}}}
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "cabinet": {
+    "box": {
+      "decided_by": [
+        "silhouette_excess"
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "A cut top still matches the image outline well enough: iou and box fill stay inside their limits, so a missing top is not noticed.",
+      "verdict": "pass"
+    },
+    "cut_33": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "TODO: say why the gate cannot see this",
+      "verdict": "pass"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The view search tries every flip, so left-right mirroring is invisible.",
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The view search tries all three axes, transposes and flips, so rotation of the whole mesh is invisible.",
+      "verdict": "pass"
+    },
+    "original": {
+      "decided_by": [],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "thin_sheet_share"
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The silhouette is fitted to the image box, so absolute size is invisible.",
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [
+        "largest_piece_share"
+      ],
+      "verdict": "fail"
+    },
+    "subdivided": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "No measure looks at face count or density, so a 16x face blow-up passes unchanged.",
+      "verdict": "pass"
+    }
+  },
+  "head": {
+    "box": {
+      "decided_by": [
+        "silhouette_excess"
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "A cut top still matches the image outline well enough: iou and box fill stay inside their limits, so a missing top is not noticed.",
+      "verdict": "pass"
+    },
+    "cut_33": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "A cut top still matches the image outline well enough: iou and box fill stay inside their limits, so a missing top is not noticed.",
+      "verdict": "pass"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The view search tries every flip, so left-right mirroring is invisible.",
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The view search tries all three axes, transposes and flips, so rotation of the whole mesh is invisible.",
+      "verdict": "pass"
+    },
+    "original": {
+      "decided_by": [],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "Squashed depth leaves the silhouette unchanged; thin_sheet_share only rises to 0.07, under its 0.20 limit.",
+      "verdict": "pass"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The silhouette is fitted to the image box, so absolute size is invisible.",
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [
+        "largest_piece_share"
+      ],
+      "verdict": "fail"
+    },
+    "subdivided": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "No measure looks at face count or density, so a 16x face blow-up passes unchanged.",
+      "verdict": "pass"
+    }
+  },
+  "tool": {
+    "box": {
+      "decided_by": [
+        "silhouette_excess"
+      ],
+      "verdict": "fail"
+    },
+    "cut_20": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "TODO: say why the gate cannot see this",
+      "verdict": "pass"
+    },
+    "cut_33": {
+      "decided_by": [
+        "silhouette_excess"
+      ],
+      "verdict": "fail"
+    },
+    "mirrored": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The view search tries every flip, so left-right mirroring is invisible.",
+      "verdict": "pass"
+    },
+    "on_side": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The view search tries all three axes, transposes and flips, so rotation of the whole mesh is invisible.",
+      "verdict": "pass"
+    },
+    "original": {
+      "decided_by": [],
+      "verdict": "pass"
+    },
+    "relief_15": {
+      "decided_by": [
+        "thin_sheet_share"
+      ],
+      "verdict": "fail"
+    },
+    "scaled_3x": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "The silhouette is fitted to the image box, so absolute size is invisible.",
+      "verdict": "pass"
+    },
+    "scatter": {
+      "decided_by": [
+        "largest_piece_share"
+      ],
+      "verdict": "fail"
+    },
+    "subdivided": {
+      "decided_by": [],
+      "known_gap": true,
+      "reason": "No measure looks at face count or density, so a 16x face blow-up passes unchanged.",
+      "verdict": "pass"
+    }
+  }
+}

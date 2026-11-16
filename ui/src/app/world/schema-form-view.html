@@ -1,0 +1,118 @@
+<div class="schema-form">
+  @for (field of fields(); track field.pointer) {
+    <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: field }"></ng-container>
+  }
+</div>
+
+<ng-template #fieldTpl let-f>
+  @switch (f.type) {
+    @case ('group') {
+      <fieldset class="group" [attr.data-field]="f.pointer">
+        <legend>{{ f.label }}</legend>
+        @if (errors()[f.pointer]; as message) {
+          <p class="field-error" role="alert">{{ message }}</p>
+        }
+        @for (child of f.children; track child.pointer) {
+          <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: child }"></ng-container>
+        }
+      </fieldset>
+    }
+    @case ('boolean') {
+      <div class="row" [attr.data-field]="f.pointer">
+        <mat-checkbox [checked]="get(f) === true" [disabled]="readonly()" (change)="setBoolean(f, $event.checked)">{{ f.label }}</mat-checkbox>
+        @if (errors()[f.pointer]; as message) {
+          <p class="field-error" role="alert">{{ message }}</p>
+        }
+      </div>
+    }
+    @case ('unsupported') {
+      <div class="row" [attr.data-field]="f.pointer">
+        <span class="unsupported-label">{{ f.label }}</span>
+        <pre class="unsupported">{{ json(f) }}</pre>
+        <p class="hint">{{ w.unsupported }}</p>
+      </div>
+    }
+    @case ('tags') {
+      <div class="row" [attr.data-field]="f.pointer">
+        <mat-form-field appearance="outline" class="wide" [class.has-error]="errors()[f.pointer]">
+          <mat-label>{{ f.label }}</mat-label>
+          <mat-chip-grid #grid [attr.aria-label]="f.label">
+            @for (tag of tags(f); track tag) {
+              <mat-chip-row [removable]="!readonly()" (removed)="removeTag(f, tag)">
+                {{ tag }}
+                @if (!readonly()) {
+                  <button matChipRemove [attr.aria-label]="w.removeTag + ' ' + tag">×</button>
+                }
+              </mat-chip-row>
+            }
+            @if (!readonly()) {
+              <input
+                [matChipInputFor]="grid"
+                [matChipInputSeparatorKeyCodes]="[13, 188]"
+                [matChipInputAddOnBlur]="true"
+                [placeholder]="w.addTag"
+                [attr.aria-label]="f.label"
+                (matChipInputTokenEnd)="addTag(f, $event)"
+              />
+            }
+          </mat-chip-grid>
+          @if (f.description) {
+            <mat-hint>{{ f.description }}</mat-hint>
+          }
+        </mat-form-field>
+        @if (errors()[f.pointer]; as message) {
+          <p class="field-error" role="alert">{{ message }}</p>
+        }
+      </div>
+    }
+    @case ('enum') {
+      <div class="row" [attr.data-field]="f.pointer">
+        <mat-form-field appearance="outline" class="wide" [class.has-error]="errors()[f.pointer]">
+          <mat-label>{{ f.label }}</mat-label>
+          <select matNativeControl [required]="f.required" [disabled]="readonly()" (change)="setText(f, $event)">
+            <option value="" [selected]="text(f) === ''"></option>
+            @for (option of f.enumValues; track option) {
+              <option [value]="option" [selected]="text(f) === '' + option">{{ option }}</option>
+            }
+          </select>
+          @if (f.description) {
+            <mat-hint>{{ f.description }}</mat-hint>
+          }
+        </mat-form-field>
+        @if (errors()[f.pointer]; as message) {
+          <p class="field-error" role="alert">{{ message }}</p>
+        }
+      </div>
+    }
+    @default {
+      <div class="row" [attr.data-field]="f.pointer">
+        <mat-form-field appearance="outline" class="wide" [class.has-error]="errors()[f.pointer]">
+          <mat-label>{{ f.label }}</mat-label>
+          @if (f.type === 'text') {
+            <textarea matInput rows="6" [value]="text(f)" [required]="f.required" [readonly]="readonly()" (input)="setText(f, $event)"></textarea>
+          } @else if (f.type === 'number' || f.type === 'integer') {
+            <input
+              matInput
+              type="number"
+              [attr.step]="f.type === 'integer' ? 1 : 'any'"
+              [attr.min]="f.minimum"
+              [attr.max]="f.maximum"
+              [value]="text(f)"
+              [required]="f.required"
+              [readonly]="readonly()"
+              (input)="setText(f, $event)"
+            />
+          } @else {
+            <input matInput type="text" [value]="text(f)" [required]="f.required" [readonly]="readonly()" (input)="setText(f, $event)" />
+          }
+          @if (f.description) {
+            <mat-hint>{{ f.description }}</mat-hint>
+          }
+        </mat-form-field>
+        @if (errors()[f.pointer]; as message) {
+          <p class="field-error" role="alert">{{ message }}</p>
+        }
+      </div>
+    }
+  }
+</ng-template>

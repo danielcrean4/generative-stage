@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "key",
+    "name"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "steps": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/step"
+      }
+    }
+  },
+  "$defs": {
+    "step": {
+      "x-story": {
+        "node": "step",
+        "text": "note",
+        "sequence": true
+      },
+      "type": "object",
+      "required": [
+        "note"
+      ],
+      "properties": {
+        "note": {
+          "type": "string"
+        },
+        "when": {
+          "x-vocabulary": "condition",
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "x-vocabulary": "effects",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "mode": {
+          "x-vocabulary": "rule_mode",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

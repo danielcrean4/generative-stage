@@ -1,0 +1,151 @@
+/* Styles for injected HTML: encapsulation is off, so every rule hangs off app-docs-body. */
+app-docs-body.doc-body {
+  display: block;
+  min-width: 0;
+  max-width: 60rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 1.5em 0 0.5em;
+    line-height: 1.25;
+    scroll-margin-top: 1rem;
+  }
+  h2 {
+    font-size: 1.6rem;
+    margin-top: 0;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+  h4 {
+    font-size: 1.1rem;
+  }
+  h5,
+  h6 {
+    font-size: 1rem;
+  }
+
+  .scroll-target {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+  :focus-visible {
+    outline: 3px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  p,
+  ul,
+  ol,
+  pre,
+  blockquote,
+  .doc-table {
+    margin: 0 0 1em;
+  }
+  ul,
+  ol {
+    padding-left: 1.6rem;
+  }
+  li > ul,
+  li > ol {
+    margin: 0.25em 0;
+  }
+
+  li.task-item {
+    list-style: none;
+    margin-left: -1.4rem;
+  }
+  .task-box {
+    font-size: 1.1em;
+  }
+  .task-done {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--mat-sys-surface-container-high);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+  pre {
+    background: var(--mat-sys-surface-container-high);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    max-width: 100%;
+    line-height: 1.45;
+    code {
+      background: none;
+      padding: 0;
+      font-size: 0.85rem;
+      overflow-wrap: normal;
+      white-space: pre;
+    }
+  }
+
+  [role='region'][aria-label='Table'] {
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 0 0 1em;
+  }
+  table {
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    overflow-wrap: normal;
+  }
+  th,
+  td {
+    border: 1px solid var(--mat-sys-outline-variant);
+    padding: 0.35rem 0.6rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--mat-sys-surface-container);
+  }
+
+  blockquote {
+    border-left: 4px solid var(--mat-sys-outline-variant);
+    margin-left: 0;
+    padding: 0 1rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    margin: 1.5rem 0;
+  }
+
+  a {
+    color: var(--mat-sys-primary);
+    text-decoration: underline;
+  }
+  a.src-blocked {
+    text-decoration-style: dotted;
+  }
+  .link-missing,
+  .link-plain {
+    text-decoration: line-through dotted;
+    color: var(--mat-sys-on-surface-variant);
+  }
+  .link-mark {
+    font-size: 0.7rem;
+    border: 1px solid var(--mat-sys-outline);
+    border-radius: 4px;
+    padding: 0 0.3rem;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
+  .doc-image {
+    font-style: italic;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

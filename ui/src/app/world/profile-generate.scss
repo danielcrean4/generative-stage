@@ -1,0 +1,157 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.panel {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  background: var(--mat-sys-surface-container-low);
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.6rem 0.8rem;
+  margin-top: 0.5rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    font-size: 0.85rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  select,
+  input,
+  textarea {
+    font: inherit;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--mat-sys-outline);
+    border-radius: 8px;
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    min-width: 0;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.85rem;
+  margin: 0.2rem 0;
+}
+
+.error {
+  color: var(--mat-sys-error);
+  margin: 0.4rem 0 0;
+}
+
+.problems {
+  margin: 0.6rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.run {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+
+  .state {
+    margin: 0 0 0.3rem;
+  }
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.1rem 0;
+  }
+
+  .dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    border: 1px solid var(--mat-sys-outline);
+    flex: none;
+  }
+
+  .step-state {
+    margin-left: auto;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  [data-step-status='succeeded'] .dot {
+    background: var(--mat-sys-primary);
+    border-color: var(--mat-sys-primary);
+  }
+
+  [data-step-status='running'] .dot {
+    border-color: var(--mat-sys-primary);
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  [data-step-status='failed'] .dot {
+    background: var(--mat-sys-error);
+    border-color: var(--mat-sys-error);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    background: var(--mat-sys-primary-container);
+  }
+}
+
+.log {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.65rem;
+  max-height: 12rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-highest);
+}

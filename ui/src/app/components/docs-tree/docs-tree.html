@@ -1,0 +1,29 @@
+<ng-template #dir let-node let-depth="depth">
+  <ul class="level" [attr.aria-label]="depth === 0 ? 'Docs in this project' : null">
+    @for (child of node.children; track child.path) {
+      <li>
+        @if (child.type === 'dir') {
+          <details [open]="depth + 1 < openDepth()">
+            <summary>
+              <span class="folder-name">{{ child.name }}</span
+              >&ngsp;<span class="count">({{ countFiles(child) }})</span>
+            </summary>
+            <ng-container
+              *ngTemplateOutlet="dir; context: { $implicit: child, depth: depth + 1 }"
+            />
+          </details>
+        } @else {
+          <a
+            class="file"
+            [routerLink]="['/docs', project(), 'file']"
+            [queryParams]="{ path: child.path }"
+          >
+            <span class="title">{{ child.title }}</span>
+            <span class="path">{{ child.path }}</span>
+          </a>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>
+<ng-container *ngTemplateOutlet="dir; context: { $implicit: root(), depth: 0 }" />

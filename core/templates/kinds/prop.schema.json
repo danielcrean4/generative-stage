@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prop",
+  "description": "An object in the story that someone can see, carry or use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": {"type": "string", "title": "Name", "minLength": 1, "maxLength": 160},
+    "brief": {
+      "type": "string",
+      "title": "Brief",
+      "description": "What it is, what it looks like and why it matters.",
+      "maxLength": 20000
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {"type": "string", "minLength": 1, "maxLength": 60},
+      "uniqueItems": true,
+      "maxItems": 50
+    },
+    "material": {"type": "string", "title": "Material", "maxLength": 200},
+    "size": {
+      "type": "string",
+      "title": "Size",
+      "enum": ["pocket", "hand", "arm", "body", "large", "huge"]
+    },
+    "condition": {"type": "string", "title": "Condition", "maxLength": 200}
+  }
+}

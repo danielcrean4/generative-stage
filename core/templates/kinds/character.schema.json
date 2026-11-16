@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Character",
+  "description": "Someone in the story.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": {"type": "string", "title": "Name", "minLength": 1, "maxLength": 160},
+    "brief": {
+      "type": "string",
+      "title": "Brief",
+      "description": "Who they are, what they want and how they look.",
+      "maxLength": 20000
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {"type": "string", "minLength": 1, "maxLength": 60},
+      "uniqueItems": true,
+      "maxItems": 50
+    },
+    "role": {"type": "string", "title": "Role in the story", "maxLength": 200},
+    "appearance": {"type": "string", "title": "Appearance", "maxLength": 4000},
+    "voice": {"type": "string", "title": "Voice and manner", "maxLength": 2000}
+  }
+}

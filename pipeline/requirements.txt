@@ -1,0 +1,13 @@
+# The image and mesh tools of the pipeline (normalize_image, crop_image, matte, colour_head, normalize_mesh,
+# decimate_mesh, mesh_gates and the review sheet) run under one interpreter: the machine setting `tools_python`
+# (docs/machine_settings.md; ./install.sh makes .venv-tools). Install exactly these into it. A model's own packages
+# belong to that model's adapter (docs/adapters.md), not to this file.
+#
+#   uv pip install --python "$TOOLS_PYTHON" -r pipeline/requirements.txt
+#
+# The unit tests, the runner and the orchestration code use the Python standard library only.
+numpy==2.5.4
+scipy==1.18.1
+trimesh==5.2.0
+Pillow==13.0.0
+fast-simplification==0.2.0  # MIT; quadric decimation (pipeline/mesh_decimate.py)

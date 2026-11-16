@@ -1,0 +1,19 @@
+{
+  "id": "photo_real",
+  "name": "Hyper-realistic",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "icon": "{subject}, {motif}, a studio product photograph, real materials, fine surface detail, crisp even focus from front to back, hyper-realistic"
+    },
+    "negative": "illustration, drawing, cartoon, toy, text, watermark"
+  },
+  "terms": [
+    "photograph",
+    "hyper-realistic",
+    "real materials",
+    "fine surface detail",
+    "product photograph"
+  ]
+}

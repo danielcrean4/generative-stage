@@ -1,0 +1,162 @@
+<app-world-gate>
+  <section class="world-page story-page" data-page="story">
+    <header class="page-head"><h2>{{ w.title }}</h2></header>
+    <p class="intro">{{ w.intro }}</p>
+
+    <div class="controls">
+      <label>
+        {{ w.entity }}
+        <select data-testid="story-entity" [value]="entity() ?? ''" (change)="show($any($event.target).value)">
+          <option value="">{{ w.all }}</option>
+          @for (o of options(); track o.id) {
+            <option [value]="o.id" [selected]="o.id === entity()">{{ o.text }}</option>
+          }
+        </select>
+      </label>
+      <span class="modes" role="group">
+        <button type="button" data-testid="mode-graph" [attr.aria-pressed]="mode() === 'graph'" (click)="mode.set('graph')">{{ w.graph }}</button>
+        <button type="button" data-testid="mode-list" [attr.aria-pressed]="mode() === 'list'" (click)="mode.set('list')">{{ w.list }}</button>
+      </span>
+      @if (entity()) {
+        <button type="button" class="link" (click)="show(null)">{{ w.back }}</button>
+      } @else {
+        <label class="check"><input type="checkbox" [checked]="showAll()" (change)="showAll.set($any($event.target).checked)" /> {{ w.allEntities }}</label>
+        @if (hidden() > 0) { <span class="hint">{{ w.hidden(hidden()) }}</span> }
+      }
+    </div>
+
+    @if (status() === 'loading' && !shown()) {
+      <p class="muted">{{ w.loading }}</p>
+    } @else if (error(); as e) {
+      <p class="error" role="alert">{{ e }}</p>
+    } @else if (!shown()?.nodes?.length) {
+      <p class="empty" data-testid="story-empty">{{ w.empty }}</p>
+    } @else {
+      <div class="story-body">
+        @if (mode() === 'graph') {
+          <div class="canvas" data-testid="story-graph">
+            @if (drawing(); as d) {
+              <svg [attr.width]="d.width" [attr.height]="d.height" [attr.viewBox]="'0 0 ' + d.width + ' ' + d.height" role="group" [attr.aria-label]="w.title">
+                <defs>
+                  <marker id="story-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0,0 L10,5 L0,10 z" class="arrow" />
+                  </marker>
+                </defs>
+                @for (e of lines(); track e.id) {
+                  <path class="edge" [class]="'edge edge-' + e.kind" [class.back]="e.back" [attr.d]="e.path" marker-end="url(#story-arrow)" />
+                }
+                @for (p of placed(); track p.id) {
+                  <g class="node" [class.root]="!p.node.pointer" [class.selected]="selected() === p.id" [class.has-problem]="problemCount(p.node) > 0"
+                     [attr.transform]="'translate(' + p.x + ',' + p.y + ')'" tabindex="0" role="button"
+                     [attr.aria-label]="nodeName(p.node)" [attr.data-node]="p.id" data-testid="story-node"
+                     (click)="select(p.id)" (keydown.enter)="select(p.id)" (keydown.space)="select(p.id); $event.preventDefault()">
+                    <rect [attr.width]="nodeWidth" [attr.height]="nodeHeight" rx="8" />
+                    <text x="10" y="22" class="name">{{ short(nodeName(p.node), labelLimit) }}</text>
+                    <text x="10" y="42" class="sub">
+                      {{ p.node.pointer ? short(p.node.text, textLimit) : kindLabel(p.node.kind) }}{{ p.node.conditions.length ? ' · ?' + p.node.conditions.length : '' }}
+                    </text>
+                  </g>
+                }
+              </svg>
+            }
+          </div>
+        } @else {
+          <ol class="story-list" data-testid="story-list">
+            @for (r of rows(); track r.node.id) {
+              <li [class.selected]="selected() === r.node.id">
+                <button type="button" class="row" [attr.data-node]="r.node.id" (click)="select(r.node.id)">
+                  <strong>{{ nodeName(r.node) }}</strong>
+                  <span class="hint">{{ r.node.pointer || kindLabel(r.node.kind) }}</span>
+                  @if (problemCount(r.node) > 0) { <span class="problem-tag">{{ w.problems(problemCount(r.node)) }}</span> }
+                </button>
+                @if (r.node.pointer && r.node.text) { <p class="said">{{ r.node.text }}</p> }
+                @for (c of r.node.conditions; track c.pointer) { <p class="cond">{{ c.text }}</p> }
+                @if (r.out.length) {
+                  <ul class="outs">
+                    @for (e of r.out; track e.id) {
+                      <li>
+                        <span class="edge-tag" [class]="'edge-tag tag-' + e.kind">{{ edgeWords[e.kind] }}</span>
+                        {{ edgeText(e) }} → {{ name(e.to) }}{{ w.count(e.count ?? 1) }}
+                        @for (c of e.conditions; track c.pointer) { <span class="cond"> if {{ c.text }}</span> }
+                        @if (e.problem) { <span class="error"> {{ e.problem }}</span> }
+                      </li>
+                    }
+                  </ul>
+                }
+              </li>
+            }
+          </ol>
+        }
+
+        <aside class="panel" data-testid="story-panel" #panel>
+          @if (chosen(); as c) {
+            <h3>{{ nodeName(c.node) }}</h3>
+            <p class="hint">{{ kindLabel(c.node.kind) }}{{ c.node.pointer ? ' · ' + c.node.pointer : '' }}</p>
+            @if (c.node.pointer && c.node.text) { <blockquote>{{ c.node.text }}</blockquote> }
+            @if (c.node.inner) { <p class="hint">{{ w.inner(c.node.inner) }}</p> }
+            <p class="actions">
+              <a [routerLink]="['/world', c.node.kind, c.node.entity]" data-testid="open-profile">{{ w.profile }}</a>
+              @if (!entity() || c.node.entity !== entity()) {
+                <button type="button" class="link" data-testid="focus-entity" (click)="show(c.node.entity)">{{ w.focus }}</button>
+              }
+            </p>
+
+            @if (c.node.conditions.length) {
+              <h4>{{ w.conditions }}</h4>
+              @for (cond of c.node.conditions; track cond.pointer) {
+                <div class="condition" data-testid="panel-condition">
+                  <p class="words">{{ cond.text }}</p>
+                  @if (cond.shorthand) { <p class="hint">{{ w.shorthand }}</p> }
+                  @for (r of cond.reads; track r.path) {
+                    <p class="hint">{{ w.reads }} <code>{{ r.path }}</code> ({{ r.type }}){{ r.doc ? ': ' + r.doc : '' }}</p>
+                  }
+                  @for (p of cond.problems; track p.field + p.message) { <p class="error">{{ p.field }}: {{ p.message }}</p> }
+                </div>
+              }
+            }
+            @if (c.node.effects.length) {
+              <h4>{{ w.effects }}</h4>
+              @for (eff of c.node.effects; track eff.pointer) {
+                <p class="words">{{ eff.text }}</p>
+                @for (p of eff.problems; track p.field + p.message) { <p class="error">{{ p.field }}: {{ p.message }}</p> }
+              }
+            }
+            @if (c.out.length) {
+              <h4>{{ w.leadsTo }}</h4>
+              <ul class="plain">
+                @for (e of c.out; track e.id) {
+                  <li data-testid="panel-out">
+                    <span class="edge-tag" [class]="'edge-tag tag-' + e.kind">{{ edgeWords[e.kind] }}</span>
+                    {{ edgeText(e) }} → <button type="button" class="link" [disabled]="!e.to" (click)="e.to && select(e.to)">{{ name(e.to) }}</button>{{ w.count(e.count ?? 1) }}
+                    @for (cond of e.conditions; track cond.pointer) {
+                      <p class="words">if {{ cond.text }}</p>
+                      @if (cond.shorthand) { <p class="hint">{{ w.shorthand }}</p> }
+                      @for (r of cond.reads; track r.path) { <p class="hint">{{ w.reads }} <code>{{ r.path }}</code>{{ r.doc ? ': ' + r.doc : '' }}</p> }
+                      @for (p of cond.problems; track p.field + p.message) { <p class="error">{{ p.field }}: {{ p.message }}</p> }
+                    }
+                    @for (eff of e.effects; track eff.pointer) { <p class="hint">{{ w.effects }}: {{ eff.text }}</p> }
+                    @if (e.problem) { <p class="error">{{ e.problem }}</p> }
+                  </li>
+                }
+              </ul>
+            }
+            @if (c.in.length) {
+              <h4>{{ w.comesFrom }}</h4>
+              <ul class="plain">
+                @for (e of c.in; track e.id) {
+                  <li><button type="button" class="link" (click)="select(e.from)">{{ name(e.from) }}</button> {{ edgeWords[e.kind] }} {{ e.text || '' }}</li>
+                }
+              </ul>
+            }
+          } @else {
+            <p class="hint">{{ w.pick }}</p>
+          }
+          <h4>{{ w.legend }}</h4>
+          <ul class="legend">
+            @for (k of edgeKinds; track k) { <li><span class="swatch" [class]="'swatch tag-' + k"></span>{{ edgeWords[k] }}</li> }
+          </ul>
+        </aside>
+      </div>
+    }
+  </section>
+</app-world-gate>

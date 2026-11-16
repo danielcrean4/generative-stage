@@ -1,0 +1,276 @@
+{
+  "adapters": [
+    {
+      "id": "standin-image",
+      "kind": "image",
+      "description": "A round subject on white; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin.py",
+        "image",
+        "--prompt={prompt}",
+        "--seed",
+        "{seed}",
+        "--width",
+        "{width}",
+        "--height",
+        "{height}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "standin"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    },
+    {
+      "id": "standin-mesh",
+      "kind": "image-to-mesh",
+      "description": "A small closed sphere coloured from the image; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin.py",
+        "mesh",
+        "--image",
+        "{image}",
+        "--seed",
+        "{seed}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "standin"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    },
+    {
+      "id": "standin-text",
+      "kind": "text",
+      "description": "A few lines naming the prompt and seed; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin.py",
+        "text",
+        "--prompt={prompt}",
+        "--seed",
+        "{seed}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "standin"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    },
+    {
+      "id": "standin-review",
+      "kind": "review",
+      "description": "A review verdict whose score comes from the image's hash; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin.py",
+        "review",
+        "--image",
+        "{image}",
+        "--prompt={prompt}",
+        "--seed",
+        "{seed}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "standin"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    },
+    {
+      "id": "standin-rig",
+      "kind": "rig",
+      "description": "Fits the example biped profile to the mesh and weights it by nearest bone, in background Blender; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin_blender.py",
+        "rig",
+        "--mesh",
+        "{mesh}",
+        "--profile",
+        "{repo}/blender/examples/rigs/biped.json",
+        "--output",
+        "{output}",
+        "--out-dir",
+        "{out_dir}"
+      ],
+      "requires": [
+        "cpu",
+        "blender"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 600,
+      "model": {
+        "name": "standin"
+      },
+      "licence": "Part of this repository (MIT; the Blender scripts it runs are MIT OR GPL-3.0-or-later). No model, no weights. Runs the Blender you installed (GPL), which is not shipped."
+    },
+    {
+      "id": "standin-motion",
+      "kind": "motion",
+      "description": "Makes the named procedural clips for the fitted rig and keys them on the mesh, in background Blender; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin_blender.py",
+        "motion",
+        "--mesh",
+        "{mesh}",
+        "--rig",
+        "{rig}",
+        "--clips",
+        "{params.clips}",
+        "--manifest",
+        "{repo}/blender/examples/motion_manifest.json",
+        "--motions",
+        "{repo}/blender/motions",
+        "--output",
+        "{output}",
+        "--out-dir",
+        "{out_dir}"
+      ],
+      "requires": [
+        "cpu",
+        "blender"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 600,
+      "model": {
+        "name": "standin"
+      },
+      "licence": "Part of this repository (MIT; the Blender scripts it runs are MIT OR GPL-3.0-or-later). No model, no weights. Runs the Blender you installed (GPL), which is not shipped."
+    },
+    {
+      "id": "rules-kit",
+      "kind": "rules",
+      "description": "Seeded candidate rows from a kit table; deterministic, no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/pipeline/rules_generate.py",
+        "--schema",
+        "{schema}",
+        "--kit",
+        "{kit}",
+        "--subject",
+        "{subject}",
+        "--seed",
+        "{seed}",
+        "--count",
+        "{count}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "rules-kit"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    },
+    {
+      "id": "standin-render",
+      "kind": "render",
+      "description": "A bar picture drawn from the parameters; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin_param.py",
+        "render",
+        "--row",
+        "{row}",
+        "--schema",
+        "{schema}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "standin-render"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    },
+    {
+      "id": "standin-measure",
+      "kind": "measure",
+      "description": "Numbers measured from the stand-in picture; no model.",
+      "argv": [
+        "{python}",
+        "-I",
+        "{repo}/adapters/standin/standin_param.py",
+        "measure",
+        "--row",
+        "{row}",
+        "--image",
+        "{image}",
+        "--output",
+        "{output}"
+      ],
+      "requires": [
+        "cpu"
+      ],
+      "sandbox": {
+        "network": "allow"
+      },
+      "timeout_seconds": 60,
+      "model": {
+        "name": "standin-measure"
+      },
+      "licence": "Part of this repository (MIT). No model, no weights."
+    }
+  ]
+}

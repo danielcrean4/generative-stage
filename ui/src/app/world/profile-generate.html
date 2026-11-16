@@ -1,0 +1,109 @@
+<section class="panel generate" data-panel="generate">
+  <div class="head">
+    <h3>{{ w.title }}</h3>
+    <button mat-button type="button" (click)="closed.emit()" data-action="close-generate">{{ w.close }}</button>
+  </div>
+
+  @if (data().error(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+  @if (!data().loaded() && !data().error()) {
+    <p class="muted">{{ w.loading }}</p>
+  } @else if (pipeline(); as p) {
+    <div class="form">
+      <label>
+        <span>{{ w.pipeline }}</span>
+        <select [value]="form().pipeline" (change)="pickPipeline($any($event.target).value)" data-field="pipeline">
+          @for (option of data().pipelines(); track option.id) {
+            <option [value]="option.id" [selected]="option.id === form().pipeline">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="wide">
+        <span>{{ w.prompt }}</span>
+        <textarea rows="3" [value]="form().prompt" (input)="setPrompt($any($event.target).value)" data-field="prompt"></textarea>
+      </label>
+
+      @for (c of choices(); track c.name) {
+        <label>
+          <span>{{ c.spec.label }}</span>
+          @if (c.name === startImage) {
+            <select [value]="form().choices[startImage] ?? ''" (change)="setPicture($any($event.target).value)" [attr.data-field]="startImage">
+              <option value="" [selected]="!form().choices[startImage]">{{ pictureSlots(c.spec.slots).length ? w.noPicture : w.noChosen }}</option>
+              @for (slot of pictureSlots(c.spec.slots); track slot) {
+                <option [value]="slot" [selected]="slot === form().choices[startImage]">{{ slotLabel(slot) }}</option>
+              }
+            </select>
+          } @else if (c.spec.options; as options) {
+            <select [value]="form().choices[c.name] ?? ''" (change)="setChoice(c.name, $any($event.target).value)" [attr.data-field]="c.name">
+              @if (c.spec.default === undefined) {
+                <option value="" [selected]="!form().choices[c.name]">{{ w.unset }}</option>
+              }
+              @for (o of options; track o) {
+                <option [value]="o" [selected]="o === form().choices[c.name]">{{ o }}</option>
+              }
+            </select>
+          } @else {
+            <input type="number" step="1" [min]="c.spec.min" [max]="c.spec.max" [value]="form().choices[c.name]" (input)="setNumber(c.name, $any($event.target).value)" [attr.data-field]="c.name" />
+          }
+        </label>
+      }
+
+      @for (kind of kinds(); track kind) {
+        <label>
+          <span>{{ w.kind(kind) }}</span>
+          <select [value]="form().adapters[kind] ?? ''" (change)="setAdapter(kind, $any($event.target).value)" [attr.data-adapter]="kind">
+            <option value="" [selected]="!form().adapters[kind]">{{ defaultLabel(kind) }}</option>
+            @for (a of options(kind); track a.id) {
+              <option [value]="a.id" [selected]="a.id === form().adapters[kind]">{{ a.label }}</option>
+            }
+          </select>
+        </label>
+      }
+    </div>
+
+    @if (stopping().length) {
+      <ul class="problems" data-testid="generate-problems">
+        @for (line of stopping(); track line) {
+          <li>{{ line }}</li>
+        }
+      </ul>
+    }
+    @if (startError(); as message) {
+      <p class="error" role="alert" data-testid="generate-error">{{ message }}</p>
+    }
+    <div class="actions">
+      <button mat-flat-button type="button" (click)="start()" [disabled]="!canStart()" data-action="start-run">{{ data().starting() ? w.starting : w.start }}</button>
+      @if (!canStart() && data().active()) {
+        <span class="muted">{{ w.busy }}</span>
+      }
+    </div>
+  } @else if (data().loaded()) {
+    <p class="muted" data-testid="no-pipelines">{{ w.none }}</p>
+  }
+
+  @if (data().run(); as run) {
+    <div class="run" data-testid="run-status" [attr.data-status]="run.status">
+      <p class="state"><strong>{{ statusWords(run.status) }}.</strong> {{ w.runLine(shortId(data().job()!.job.id)) }}</p>
+      @if (run.steps.length) {
+        <ol class="steps">
+          @for (s of run.steps; track s.id) {
+            <li [attr.data-step-status]="s.status"><span class="dot"></span>{{ s.label }} <span class="step-state">{{ s.status }}</span></li>
+          }
+        </ol>
+      }
+      @if (run.status === 'failed' && run.log_tail) {
+        <pre class="log" data-testid="run-log">{{ run.log_tail }}</pre>
+      }
+      @if (run.status === 'succeeded') {
+        <p>
+          {{ w.made(data().job()!.candidates.length) }}
+          <a [routerLink]="['/world', kind(), entityId(), 'runs', data().job()!.job.id]" data-action="open-run">{{ w.openRun }}</a>
+        </p>
+      } @else if (run.status === 'failed' && data().job()!.attached) {
+        <p><a [routerLink]="['/world', kind(), entityId(), 'runs', data().job()!.job.id]" data-action="open-run">{{ w.openFailed }}</a></p>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lamp",
+  "description": "A small parametric example: a lamp made from numbers, a select, a switch and a colour.",
+  "type": "object",
+  "x-selector": "shade",
+  "required": ["name", "shade"],
+  "properties": {
+    "name": {"type": "string", "title": "Name", "minLength": 1, "maxLength": 160},
+    "brief": {"type": "string", "title": "Brief", "maxLength": 20000},
+    "tags": {"type": "array", "title": "Tags", "items": {"type": "string", "minLength": 1, "maxLength": 60}, "uniqueItems": true, "maxItems": 50},
+    "theme": {"type": "string", "title": "Theme", "enum": ["modern", "rustic", "industrial"]},
+    "material": {"type": "string", "title": "Material", "enum": ["brass", "oak", "steel"]},
+    "shade": {"type": "string", "title": "Shade", "enum": ["drum", "cone"]},
+    "height_cm": {"type": "number", "title": "Height", "minimum": 30, "maximum": 200, "multipleOf": 5, "x-unit": "cm"},
+    "base_radius_cm": {"type": "number", "title": "Base radius", "minimum": 6, "maximum": 30, "multipleOf": 1, "x-unit": "cm"},
+    "has_arm": {"type": "boolean", "title": "Swing arm"},
+    "arm_reach_cm": {"type": "number", "title": "Arm reach", "minimum": 5, "maximum": 60, "multipleOf": 5, "x-unit": "cm", "x-when": "has_arm"},
+    "colour": {"type": "string", "title": "Colour", "format": "color", "pattern": "^#[0-9a-fA-F]{6}$"}
+  },
+  "allOf": [
+    {"if": {"properties": {"shade": {"const": "drum"}}, "required": ["shade"]},
+     "then": {"properties": {"drum_radius_cm": {"type": "number", "title": "Drum radius", "minimum": 8, "maximum": 40, "multipleOf": 1, "x-unit": "cm"}}}},
+    {"if": {"properties": {"shade": {"const": "cone"}}, "required": ["shade"]},
+     "then": {"properties": {
+       "cone_top_cm": {"type": "number", "title": "Cone top", "minimum": 4, "maximum": 20, "multipleOf": 1, "x-unit": "cm"},
+       "cone_bottom_cm": {"type": "number", "title": "Cone bottom", "minimum": 10, "maximum": 40, "multipleOf": 1, "x-unit": "cm"}}}}
+  ],
+  "unevaluatedProperties": false
+}

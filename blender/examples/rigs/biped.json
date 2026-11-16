@@ -1,0 +1,238 @@
+{
+ "name": "biped",
+ "joints": {
+  "root": {
+   "parent": null,
+   "offset": [
+    0,
+    0,
+    0
+   ]
+  },
+  "hip_l": {
+   "parent": "root",
+   "offset": [
+    0.13,
+    0.48,
+    0
+   ],
+   "limits": {
+    "x": [
+     -1.6,
+     1.6
+    ]
+   }
+  },
+  "knee_l": {
+   "parent": "hip_l",
+   "offset": [
+    0.0325,
+    -0.18,
+    0.07
+   ],
+   "limits": {
+    "x": [
+     -0.4,
+     2.6
+    ]
+   }
+  },
+  "hip_r": {
+   "parent": "root",
+   "offset": [
+    -0.13,
+    0.48,
+    0
+   ],
+   "limits": {
+    "x": [
+     -1.6,
+     1.6
+    ]
+   }
+  },
+  "knee_r": {
+   "parent": "hip_r",
+   "offset": [
+    -0.0325,
+    -0.18,
+    0.07
+   ],
+   "limits": {
+    "x": [
+     -0.4,
+     2.6
+    ]
+   }
+  },
+  "body": {
+   "parent": "root",
+   "offset": [
+    0,
+    0.56,
+    0
+   ],
+   "limits": {
+    "x": [
+     -1.2,
+     1.2
+    ],
+    "y": [
+     -0.8,
+     0.8
+    ]
+   }
+  },
+  "head": {
+   "parent": "body",
+   "offset": [
+    0,
+    0.45,
+    0
+   ],
+   "limits": {
+    "x": [
+     -0.8,
+     0.8
+    ],
+    "y": [
+     -1.2,
+     1.2
+    ]
+   }
+  },
+  "shoulder_r": {
+   "parent": "body",
+   "offset": [
+    -0.28,
+    0.336,
+    0
+   ],
+   "limits": {
+    "x": [
+     -3.0,
+     1.5
+    ],
+    "z": [
+     -1.6,
+     1.6
+    ]
+   }
+  },
+  "elbow_r": {
+   "parent": "shoulder_r",
+   "offset": [
+    -0.07,
+    -0.17,
+    0.02
+   ],
+   "limits": {
+    "x": [
+     -2.4,
+     0.2
+    ]
+   }
+  },
+  "wrist_r": {
+   "parent": "elbow_r",
+   "offset": [
+    -0.02,
+    -0.16,
+    0.04
+   ]
+  },
+  "shoulder_l": {
+   "parent": "body",
+   "offset": [
+    0.28,
+    0.336,
+    0
+   ],
+   "limits": {
+    "x": [
+     -3.0,
+     1.5
+    ],
+    "z": [
+     -1.6,
+     1.6
+    ]
+   }
+  },
+  "elbow_l": {
+   "parent": "shoulder_l",
+   "offset": [
+    0.07,
+    -0.17,
+    0.02
+   ],
+   "limits": {
+    "x": [
+     -2.4,
+     0.2
+    ]
+   }
+  },
+  "wrist_l": {
+   "parent": "elbow_l",
+   "offset": [
+    0.02,
+    -0.16,
+    0.04
+   ]
+  }
+ },
+ "sites": {
+  "foot_l": {
+   "parent": "knee_l",
+   "offset": [
+    0,
+    -0.3,
+    -0.07
+   ]
+  },
+  "foot_r": {
+   "parent": "knee_r",
+   "offset": [
+    0,
+    -0.3,
+    -0.07
+   ]
+  },
+  "hand_r": {
+   "parent": "wrist_r",
+   "offset": [
+    0,
+    -0.08,
+    0
+   ]
+  },
+  "hand_l": {
+   "parent": "wrist_l",
+   "offset": [
+    0,
+    -0.08,
+    0
+   ]
+  }
+ },
+ "roles": {
+  "root": "root",
+  "hip_l": "hip_l",
+  "knee_l": "knee_l",
+  "hip_r": "hip_r",
+  "knee_r": "knee_r",
+  "body": "body",
+  "head": "head",
+  "shoulder_r": "shoulder_r",
+  "elbow_r": "elbow_r",
+  "wrist_r": "wrist_r",
+  "shoulder_l": "shoulder_l",
+  "elbow_l": "elbow_l",
+  "wrist_l": "wrist_l",
+  "foot_l": "foot_l",
+  "foot_r": "foot_r",
+  "hand_r": "hand_r",
+  "hand_l": "hand_l"
+ }
+}

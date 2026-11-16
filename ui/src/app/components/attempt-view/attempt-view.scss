@@ -1,0 +1,56 @@
+.attempt-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 1000px;
+
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+  .id {
+    font-family: monospace;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+  .attempt-error {
+    border: 1px solid var(--mat-sys-error);
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    overflow-wrap: anywhere;
+  }
+  .summary,
+  .kv {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    dt {
+      opacity: 0.75;
+    }
+  }
+  .status {
+    font-weight: 600;
+  }
+  .status[data-status='failed'] {
+    color: var(--mat-sys-error);
+  }
+  .muted {
+    opacity: 0.7;
+  }
+  summary,
+  a {
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+    }
+  }
+}

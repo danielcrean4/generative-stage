@@ -1,0 +1,260 @@
+.story-page {
+  max-width: none;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+
+  select {
+    max-width: 100%;
+    margin-left: 0.25rem;
+  }
+
+  label {
+    max-width: 100%;
+  }
+}
+
+.modes button[aria-pressed='true'] {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+button.link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+
+  &:disabled {
+    color: inherit;
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+.story-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .story-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.canvas {
+  overflow: auto;
+  max-height: 75vh;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+svg {
+  display: block;
+}
+
+.node {
+  cursor: pointer;
+
+  rect {
+    fill: var(--mat-sys-surface-container);
+    stroke: var(--mat-sys-outline);
+    stroke-width: 1;
+  }
+
+  &.root rect {
+    fill: var(--mat-sys-secondary-container);
+  }
+
+  &.has-problem rect {
+    stroke: var(--mat-sys-error);
+    stroke-width: 2;
+  }
+
+  &.selected rect,
+  &:focus-visible rect {
+    stroke: var(--mat-sys-primary);
+    stroke-width: 3;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  .name {
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--mat-sys-on-surface);
+  }
+
+  .sub {
+    font-size: 11px;
+    fill: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.arrow {
+  fill: var(--mat-sys-outline);
+}
+
+.edge {
+  fill: none;
+  stroke: var(--mat-sys-outline);
+  stroke-width: 1.5;
+
+  &.back {
+    stroke-dasharray: 5 4;
+  }
+}
+
+/* One colour per edge kind, from the theme's own roles. */
+.edge-contains { stroke: var(--mat-sys-outline-variant); }
+.edge-edge { stroke: var(--mat-sys-primary); }
+.edge-sequence { stroke: var(--mat-sys-on-surface); }
+.edge-ref, .edge-effect { stroke: var(--mat-sys-tertiary); }
+.edge-reads { stroke: var(--mat-sys-secondary); stroke-dasharray: 2 3; }
+.edge-link { stroke: var(--mat-sys-outline); stroke-dasharray: 8 3; }
+
+.tag-contains { background: var(--mat-sys-outline-variant); }
+.tag-edge { background: var(--mat-sys-primary); }
+.tag-sequence { background: var(--mat-sys-on-surface); }
+.tag-ref, .tag-effect { background: var(--mat-sys-tertiary); }
+.tag-reads { background: var(--mat-sys-secondary); }
+.tag-link { background: var(--mat-sys-outline); }
+
+.edge-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+  color: var(--mat-sys-surface);
+}
+
+.panel {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  padding: 0.75rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  h3,
+  h4 {
+    margin: 0.5rem 0 0.25rem;
+  }
+
+  blockquote {
+    margin: 0.25rem 0;
+    padding-left: 0.5rem;
+    border-left: 3px solid var(--mat-sys-outline-variant);
+  }
+
+  p {
+    margin: 0.15rem 0;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.condition {
+  margin-bottom: 0.5rem;
+}
+
+.words {
+  font-family: var(--mat-sys-body-medium-font, inherit);
+}
+
+.plain,
+.legend,
+.outs,
+.story-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.plain li {
+  margin-bottom: 0.4rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 2px;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
+.story-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+
+  > li {
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 8px;
+    padding: 0.5rem;
+    overflow-wrap: anywhere;
+
+    &.selected {
+      border-color: var(--mat-sys-primary);
+    }
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    align-items: baseline;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .said,
+  .cond {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+  }
+
+  .cond {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .outs li {
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+  }
+}
+
+.problem-tag {
+  color: var(--mat-sys-error);
+  font-size: 0.8rem;
+}

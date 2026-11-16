@@ -1,0 +1,23 @@
+{
+  "id": "bad_doodle",
+  "name": "Comically badly drawn",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "icon": "a small child's crude wobbly marker and crayon drawing of {subject}, {motif}, thick uneven scribbled outlines, flat crayon colour, wrong proportions, deliberately clumsy and badly drawn, like a kindergarten drawing"
+    },
+    "negative": "photograph, realistic, polished, neat, text, watermark"
+  },
+  "terms": [
+    "crayon",
+    "marker",
+    "scribbled",
+    "wobbly",
+    "badly drawn",
+    "clumsy",
+    "child's",
+    "kindergarten",
+    "crude"
+  ]
+}

@@ -1,0 +1,114 @@
+<app-world-gate>
+  <section class="stats" data-page="statistics">
+    <h2>{{ w.title }}</h2>
+    <p class="hint">{{ w.intro }}</p>
+
+    @if (loading() && !stats()) {
+      <p class="muted">{{ w.loading }}</p>
+    } @else if (error(); as message) {
+      <p class="error" role="alert">{{ w.loadFailed }} {{ message }}</p>
+    } @else if (stats(); as s) {
+      <ul class="tiles" data-testid="stat-tiles">
+        <li><span class="num" data-stat="runs">{{ s.runs.total }}</span><span>{{ w.runs }}</span></li>
+        <li><span class="num" data-stat="completed">{{ s.runs.completed }}</span><span>{{ w.completed }}</span></li>
+        <li><span class="num" data-stat="errored">{{ s.runs.errored }}</span><span>{{ w.errored }}</span></li>
+        <li><span class="num" data-stat="candidates">{{ s.assets.candidates }}</span><span>{{ w.candidates }}</span></li>
+        <li><span class="num" data-stat="chosen">{{ s.assets.chosen_slots }}</span><span>{{ w.chosenNow }}</span></li>
+      </ul>
+
+      @if (s.runs.total === 0) {
+        <p class="empty" data-testid="stats-empty">{{ w.empty }}</p>
+      } @else {
+        <section class="panel" data-panel="split">
+          <h3>{{ w.split }}</h3>
+          <div class="split" role="img" [attr.aria-label]="w.completed + ': ' + s.runs.completed + ', ' + w.errored + ': ' + s.runs.errored + (s.runs.other ? ', ' + w.other + ': ' + s.runs.other : '')">
+            <span class="seg completed" [style.flex-grow]="s.runs.completed"></span>
+            <span class="seg errored" [style.flex-grow]="s.runs.errored"></span>
+            <span class="seg other" [style.flex-grow]="s.runs.other"></span>
+          </div>
+          <ul class="legend">
+            <li><span class="key completed"></span>{{ w.completed }}: {{ s.runs.completed }}</li>
+            <li><span class="key errored"></span>{{ w.errored }}: {{ s.runs.errored }}</li>
+            @if (s.runs.other) {
+              <li><span class="key other"></span>{{ w.other }}: {{ s.runs.other }}</li>
+            }
+            <li>{{ w.total }}: {{ time(s.runs.seconds) }}</li>
+          </ul>
+        </section>
+
+        <section class="panel" data-panel="over-time">
+          <h3>{{ w.overTime }}</h3>
+          <p class="hint">{{ w.overTimeHelp }}</p>
+          <div class="days" data-testid="days">
+            @for (d of s.by_day; track d.day) {
+              <div class="day" [attr.data-day]="d.day">
+                <div class="bar" role="img" [attr.aria-label]="w.dayLabel(d.day, d.completed, d.errored, d.other)" [style.height.%]="percent(d.completed + d.errored + d.other, busiest())">
+                  <span class="seg errored" [style.flex-grow]="d.errored"></span>
+                  <span class="seg other" [style.flex-grow]="d.other"></span>
+                  <span class="seg completed" [style.flex-grow]="d.completed"></span>
+                </div>
+                <span class="count">{{ d.completed + d.errored + d.other }}</span>
+                <span class="label">{{ day(d.day) }}</span>
+              </div>
+            }
+          </div>
+          <details>
+            <summary>{{ w.asTable }}</summary>
+            <table class="data">
+              <thead><tr><th scope="col">{{ w.day }}</th><th scope="col">{{ w.completed }}</th><th scope="col">{{ w.errored }}</th><th scope="col">{{ w.other }}</th></tr></thead>
+              <tbody>
+                @for (d of s.by_day; track d.day) {
+                  <tr><th scope="row">{{ d.day }}</th><td>{{ d.completed }}</td><td>{{ d.errored }}</td><td>{{ d.other }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </details>
+        </section>
+
+        <section class="panel" data-panel="per-stage">
+          <h3>{{ w.perStage }}</h3>
+          <p class="hint">{{ w.perStageHelp }}</p>
+          <ul class="hbars" data-testid="stages">
+            @for (st of s.by_stage; track st.stage) {
+              <li [attr.data-stage]="st.stage">
+                <span class="name">{{ st.stage }}</span>
+                <span class="track"><span class="fill" [style.width.%]="percent(st.total_seconds, longest())"></span></span>
+                <span class="value">{{ time(st.total_seconds) }}</span>
+              </li>
+            }
+          </ul>
+          <details>
+            <summary>{{ w.asTable }}</summary>
+            <table class="data">
+              <thead>
+                <tr>
+                  <th scope="col">{{ w.stage }}</th><th scope="col">{{ w.ran }}</th><th scope="col">{{ w.reused }}</th><th scope="col">{{ w.errors }}</th>
+                  <th scope="col">{{ w.total }}</th><th scope="col">{{ w.average }}</th><th scope="col">{{ w.slowest }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (st of s.by_stage; track st.stage) {
+                  <tr>
+                    <th scope="row">{{ st.stage }}</th><td>{{ st.ran }}</td><td>{{ st.reused }}</td><td>{{ st.errored }}</td>
+                    <td>{{ time(st.total_seconds) }}</td><td>{{ time(st.average_seconds) }}</td><td>{{ time(st.slowest_seconds) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </details>
+        </section>
+      }
+
+      <section class="panel" data-panel="assets">
+        <h3>{{ w.assets }}</h3>
+        <table class="data">
+          <tbody>
+            <tr><th scope="row">{{ w.candidates }}</th><td>{{ s.assets.candidates }}</td></tr>
+            <tr><th scope="row">{{ w.choices }}</th><td>{{ s.assets.choices }}</td></tr>
+            <tr><th scope="row">{{ w.chosenNow }}</th><td>{{ s.assets.chosen_slots }} ({{ w.withChoice(s.assets.entities_with_choice, s.assets.entities) }})</td></tr>
+          </tbody>
+        </table>
+      </section>
+    }
+  </section>
+</app-world-gate>

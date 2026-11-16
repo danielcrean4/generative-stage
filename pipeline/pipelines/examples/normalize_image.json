@@ -1,0 +1,7 @@
+{
+  "background_tolerance": 236,
+  "canvas_size": 512,
+  "margin": 32,
+  "output_mode": "rgba",
+  "background_color": [255, 255, 255]
+}

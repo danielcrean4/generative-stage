@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:generative-stage-vocabulary-1",
+  "title": "Condition vocabulary",
+  "description": "What a project's conditions may read and what its effects may do (docs/vocabulary.md). A game makes this file from its own code and supplies it as data; the tool never invents it.",
+  "type": "object",
+  "required": ["format", "format_version", "types", "facts", "operators"],
+  "additionalProperties": false,
+  "properties": {
+    "format": {"enum": ["generative-stage-vocabulary", "dramatis-vocabulary"], "description": "dramatis-vocabulary is the id used before the rename; both are read"},
+    "format_version": {"const": 1},
+    "source": {"type": "string", "maxLength": 500, "description": "What made this file, for people"},
+    "types": {
+      "description": "The value types a fact can have, each with the JSON type of a value of it ('array' is a list of strings)",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"$ref": "#/$defs/name"},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["json"],
+        "additionalProperties": false,
+        "properties": {
+          "json": {"enum": ["integer", "number", "boolean", "string", "array"]},
+          "doc": {"$ref": "#/$defs/doc"}
+        }
+      }
+    },
+    "facts": {
+      "description": "Every fact a condition can read, as a pattern: dot-separated segments, each a name with an optional id kind in parentheses",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["pattern", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "pattern": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\([a-z][a-z0-9_]*\\))?(\\.[a-z][a-z0-9_]*(\\([a-z][a-z0-9_]*\\))?)*$"},
+          "type": {"$ref": "#/$defs/name"},
+          "doc": {"$ref": "#/$defs/doc"}
+        }
+      }
+    },
+    "operators": {
+      "description": "The comparison operators a leaf may use: the fact types each accepts, what its value must be (same: a value of the fact's type; member: one id; list: a non-empty list of values of the fact's type) and the words that show it",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"$ref": "#/$defs/name"},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["types", "operand", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "types": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/name"}},
+          "operand": {"enum": ["same", "member", "list"]},
+          "text": {"type": "string", "minLength": 1, "maxLength": 40}
+        }
+      }
+    },
+    "id_kinds": {
+      "description": "The kinds of id that appear in fact patterns and effect arguments. entity_kinds names the project kinds whose entities those ids are, matched on the entity's `field` (default key)",
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/name"},
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "doc": {"$ref": "#/$defs/doc"},
+          "entity_kinds": {"type": "array", "items": {"$ref": "#/$defs/name"}},
+          "field": {"$ref": "#/$defs/name"}
+        }
+      }
+    },
+    "effects": {
+      "description": "What a rule can do. Each effect is an object whose `key` field names its kind; its other fields are that kind's arguments",
+      "type": "object",
+      "required": ["key", "kinds"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/name"},
+        "kinds": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/name"},
+          "additionalProperties": {
+            "type": "object",
+            "required": ["args"],
+            "additionalProperties": false,
+            "properties": {
+              "doc": {"$ref": "#/$defs/doc"},
+              "args": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"$ref": "#/$defs/argument"}},
+              "required": {"type": "array", "items": {"$ref": "#/$defs/name"}},
+              "ref": {"$ref": "#/$defs/ref"}
+            }
+          }
+        }
+      }
+    },
+    "rule_modes": {
+      "description": "How often a rule may fire",
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/name"},
+      "additionalProperties": {"type": "object", "additionalProperties": false, "properties": {"doc": {"$ref": "#/$defs/doc"}}}
+    },
+    "shorthand": {
+      "description": "Older condition keys the game still reads. A condition object made only of these keys is accepted as written and shown key by key; the tool cannot say what it reads",
+      "type": "object",
+      "required": ["keys"],
+      "additionalProperties": false,
+      "properties": {
+        "keys": {"type": "array", "items": {"$ref": "#/$defs/name"}},
+        "doc": {"$ref": "#/$defs/doc"}
+      }
+    }
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "doc": {"type": "string", "maxLength": 500},
+    "argument": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"enum": ["integer", "number", "boolean", "string"]},
+        "description": {"$ref": "#/$defs/doc"},
+        "minimum": {"type": "number"},
+        "maximum": {"type": "number"},
+        "minLength": {"type": "integer", "minimum": 0},
+        "maxLength": {"type": "integer", "minimum": 0},
+        "pattern": {"type": "string"},
+        "enum": {"type": "array", "minItems": 1},
+        "id_kind": {"$ref": "#/$defs/name"}
+      }
+    },
+    "ref": {
+      "description": "The entity (and the place inside it) an effect points at: the id kind, the argument holding the id, and optionally a JSON pointer template inside that entity where {name} is an argument's value",
+      "type": "object",
+      "required": ["id_kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "id_kind": {"$ref": "#/$defs/name"},
+        "id": {"$ref": "#/$defs/name"},
+        "at": {"type": "string", "pattern": "^(/[^/]*)*$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+.make { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 0.8rem 0; }
+.make fieldset { border: 1px solid var(--mat-sys-outline-variant); }
+.make label { display: inline-flex; gap: 0.3rem; align-items: center; margin-right: 0.6rem; }
+.make input[type='number'] { width: 5rem; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.8rem; }
+.tile { margin: 0; padding: 0.4rem; border: 1px solid var(--mat-sys-outline-variant); border-radius: 6px; }
+.tile img { width: 100%; height: auto; background: #fff; }
+.tile figcaption { font-size: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.tile[data-mark='keep'] { outline: 2px solid var(--mat-sys-primary); }
+.tile[data-mark='remove'] { opacity: 0.45; }
+.badge.bad, .gate { color: var(--mat-sys-error); }
+.marks { display: flex; gap: 0.2rem; margin-top: 0.3rem; }
+.marks button { flex: 1; font-size: 0.75rem; padding: 0.2rem; cursor: pointer; }
+.marks button.on { background: var(--mat-sys-primary); color: var(--mat-sys-on-primary); }
+.note { width: 100%; margin-top: 0.3rem; box-sizing: border-box; }
+.error { color: var(--mat-sys-error); }
