@@ -23,8 +23,7 @@ from core.errors import Conflict, Invalid
 from core.world import World
 from export.provenance import Provenance, read_provenance
 
-# The format id written into every manifest. The id from before the rename, dramatis-fabrica-bundle, is still read
-# (manifest.schema.json allows both).
+# The format id written into every manifest.
 FORMAT = "generative-stage-bundle"
 FORMAT_VERSION = 1
 MANIFEST = "manifest.json"

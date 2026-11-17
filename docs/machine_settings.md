@@ -4,8 +4,7 @@ Where this computer keeps the pipeline's models, interpreters and GPU lock. The 
 needed and not set stops the tool with an error that names the setting and the file.
 
 The file is JSON. It is the one named by the environment variable `GENSTAGE_MACHINE_CONFIG` (it must exist), else
-`~/.config/generative-stage/machine.json` (while that file is missing, `~/.config/dramatis-fabrica/machine.json`, the
-tool's earlier name, is read with a note; `scripts/migrate_home.py` moves it). A value may start with `~` (the home folder); a relative value is taken from the
+`~/.config/generative-stage/machine.json`. A value may start with `~` (the home folder); a relative value is taken from the
 file's folder. Unknown keys are an error. A setting is read when a tool first needs it, so a tool that never runs a model
 never asks for one. `pipeline/machine.py` is the one reader.
 

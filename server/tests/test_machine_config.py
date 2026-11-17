@@ -10,13 +10,10 @@ from authoring.jobs import Dispatcher
 from authoring.machine_config import (
     BUILT_IN,
     ENV_VAR,
-    OLD_ENV_VAR,
     ConfigError,
     MachineConfig,
     load_machine_config,
 )
-
-OLD_FOLDER = "dramatis-fabrica"  # the tool's earlier name, read for one release
 
 
 def load(tmp_path: Path, raw: object, name: str = "machine.json") -> MachineConfig:
@@ -40,43 +37,6 @@ def test_default_file_location_is_read(tmp_path: Path) -> None:
     config = load_machine_config({}, home=home)
     assert config.runs_root == Path("/opt/runs")
     assert config.source.endswith(".config/generative-stage/server.json")
-
-
-def test_a_file_from_before_the_rename_is_read_while_the_new_one_is_missing(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    home = tmp_path / "home"
-    (home / ".config" / OLD_FOLDER).mkdir(parents=True)
-    (home / ".config" / OLD_FOLDER / "server.json").write_text('{"runs_root": "/opt/runs"}')
-    (home / ".local/share" / OLD_FOLDER).mkdir(parents=True)
-    # the pipeline's machine.json has moved; server.json has not: it is still found
-    (home / ".config/generative-stage").mkdir(parents=True)
-    (home / ".config/generative-stage/machine.json").write_text("{}")
-    config = load_machine_config({}, home=home)
-    assert config.source == str(home / ".config" / OLD_FOLDER / "server.json")
-    assert config.data_dir == home / ".local/share" / OLD_FOLDER
-    assert "migrate_home.py" in capsys.readouterr().err
-    (home / ".local/share/generative-stage").mkdir()  # the data moved, the settings did not
-    config = load_machine_config({}, home=home)
-    assert config.source == str(home / ".config" / OLD_FOLDER / "server.json")
-    assert config.data_dir == home / ".local/share/generative-stage"
-    (home / ".config/generative-stage/server.json").write_text("{}")
-    config = load_machine_config({}, home=home)
-    assert config.source == str(home / ".config/generative-stage/server.json")  # the new file wins
-
-
-def test_the_older_variable_name_is_read_with_a_note(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    file = tmp_path / "server.json"
-    file.write_text('{"data_dir": "/data/old-name"}')
-    config = load_machine_config({OLD_ENV_VAR: str(file)}, home=tmp_path)
-    assert config.data_dir == Path("/data/old-name")
-    assert ENV_VAR in capsys.readouterr().err
-    other = tmp_path / "other.json"
-    other.write_text('{"data_dir": "/data/new-name"}')
-    config = load_machine_config({OLD_ENV_VAR: str(file), ENV_VAR: str(other)}, home=tmp_path)
-    assert config.data_dir == Path("/data/new-name")
 
 
 def test_env_names_the_file_and_overrides_defaults(tmp_path: Path) -> None:

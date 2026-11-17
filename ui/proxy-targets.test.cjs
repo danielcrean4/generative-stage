@@ -30,28 +30,18 @@ test('environment variables set the targets', () => {
   });
 });
 
-test('the older variable names are still read, and the new ones win', () => {
-  const env = { DF_API_TARGET: 'http://127.0.0.1:4311', DF_READONLY_TARGET: 'http://127.0.0.1:4312' };
-  assert.deepEqual(proxyTargets(env, none), {
-    api: 'http://127.0.0.1:4311',
-    readonly: 'http://127.0.0.1:4312',
-  });
-  env.GENSTAGE_API_TARGET = 'http://127.0.0.1:4313';
-  assert.equal(proxyTargets(env, none).api, 'http://127.0.0.1:4313');
-});
-
 test('a local file sets one target and the environment wins over it', () => {
   const file = localFile('{"api": "http://127.0.0.1:9000", "readonly": "http://127.0.0.1:9001"}');
   assert.equal(proxyTargets({}, file).api, 'http://127.0.0.1:9000');
-  const mixed = proxyTargets({ DF_API_TARGET: 'http://127.0.0.1:9100' }, file);
+  const mixed = proxyTargets({ GENSTAGE_API_TARGET: 'http://127.0.0.1:9100' }, file);
   assert.deepEqual(mixed, { api: 'http://127.0.0.1:9100', readonly: 'http://127.0.0.1:9001' });
   const partial = proxyTargets({}, localFile('{"readonly": "http://127.0.0.1:9001"}'));
   assert.equal(partial.api, 'http://127.0.0.1:8780');
 });
 
 test('bad settings are refused with a message naming the source', () => {
-  assert.throws(() => proxyTargets({ DF_API_TARGET: '4311' }, none), /environment: DF_API_TARGET/);
-  assert.throws(() => proxyTargets({ DF_API_TARGET: 'ftp://x' }, none), /http:\/\/ or https:\/\//);
+  assert.throws(() => proxyTargets({ GENSTAGE_API_TARGET: '4311' }, none), /environment: GENSTAGE_API_TARGET/);
+  assert.throws(() => proxyTargets({ GENSTAGE_API_TARGET: 'ftp://x' }, none), /http:\/\/ or https:\/\//);
   assert.throws(() => proxyTargets({}, localFile('{nope')), /not valid JSON/);
   assert.throws(() => proxyTargets({}, localFile('{"port": 1}')), /unknown key 'port'/);
   assert.throws(() => proxyTargets({}, localFile('[]')), /expected a JSON object/);

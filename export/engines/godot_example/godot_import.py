@@ -15,10 +15,7 @@ import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-FORMATS = (
-    "generative-stage-bundle",
-    "dramatis-fabrica-bundle",
-)  # the bundle's id now and before the rename
+FORMAT = "generative-stage-bundle"
 FORMAT_VERSION = 1
 FOLDERS = {"model/gltf-binary": ("models", ".glb"), "image/png": ("images", ".png")}
 OTHER = ("files", "")
@@ -33,8 +30,8 @@ def _manifest(bundle: Path) -> dict[str, Any]:
         manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise ImportProblem(f"{bundle}: no readable manifest.json ({error})") from error
-    if manifest.get("format") not in FORMATS or manifest.get("format_version") != FORMAT_VERSION:
-        raise ImportProblem(f"{bundle}: not a version {FORMAT_VERSION} {FORMATS[0]}")
+    if manifest.get("format") != FORMAT or manifest.get("format_version") != FORMAT_VERSION:
+        raise ImportProblem(f"{bundle}: not a version {FORMAT_VERSION} {FORMAT}")
     return manifest  # type: ignore[no-any-return]
 
 

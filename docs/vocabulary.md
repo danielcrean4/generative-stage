@@ -44,7 +44,7 @@ again on every request, so replacing the file applies at once.
 
 | Key | Required | What it is |
 |---|---|---|
-| `format`, `format_version` | yes | `"generative-stage-vocabulary"` and `1`; `"dramatis-vocabulary"`, the id used before the rename, is read too |
+| `format`, `format_version` | yes | `"generative-stage-vocabulary"` and `1` |
 | `source` | no | what made the file, for people |
 | `types` | yes | each fact type with the JSON type of its values; `array` is a list of strings |
 | `facts` | yes | every fact a condition may read. A pattern is dot-separated names; a name may take an id kind in parentheses, which a condition fills with an id: `errand(errand).step` is read as `errand(fetch_oil).step`. An id is lowercase letters, digits, `_`, spaces, `.`, `:` and `-` |

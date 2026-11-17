@@ -10,11 +10,10 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
-import old_names
 from local_run import StepFailed
 
 IDENTITY_CACHE_ENV = "GENSTAGE_IDENTITY_CACHE"
-IDENTITY_CACHE_FILE = "model-identity.json"  # in old_names.home_dir(".cache")
+IDENTITY_CACHE_FILE = "model-identity.json"  # in ~/.cache/generative-stage
 
 
 def digest(path: Path) -> str:
@@ -45,8 +44,8 @@ def read_json(path: Path, default):
 
 def identity_cache_path() -> Path:
     """The one file that remembers model-folder hashes between runs (the environment overrides it, for tests and other disks)."""
-    named = old_names.env("IDENTITY_CACHE")
-    return Path(named).expanduser() if named else old_names.home_dir(".cache") / IDENTITY_CACHE_FILE
+    named = os.environ.get(IDENTITY_CACHE_ENV)
+    return Path(named).expanduser() if named else Path("~/.cache/generative-stage").expanduser() / IDENTITY_CACHE_FILE
 
 
 def model_identity_uncached(folder: Path, hasher=digest) -> dict:

@@ -7,24 +7,21 @@ Both can come from the environment instead: GENSTAGE_API_URL and GENSTAGE_PROJEC
 
 import argparse
 import asyncio
+import os
 import sys
-from pathlib import Path
 
 from mcp.server.stdio import stdio_server
 
 from mcp_server.app import Context, build_server
 from mcp_server.client import ApiClient
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "pipeline"))
-import old_names  # noqa: E402
-
 DEFAULT_API = "http://127.0.0.1:8780"
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="MCP server over the Generative Stage v1 HTTP API")
-    parser.add_argument("--api", default=old_names.env("API_URL") or DEFAULT_API)
-    parser.add_argument("--project", default=old_names.env("PROJECT"))
+    parser.add_argument("--api", default=os.environ.get("GENSTAGE_API_URL") or DEFAULT_API)
+    parser.add_argument("--project", default=os.environ.get("GENSTAGE_PROJECT"))
     args = parser.parse_args(argv)
     try:
         client = ApiClient(args.api)

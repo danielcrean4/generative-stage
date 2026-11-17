@@ -163,21 +163,6 @@ that run the image and mesh tools, and the browser specs' throwaway server, use 
 - [Condition vocabulary](docs/vocabulary.md) and [story graph](docs/story_graph.md).
 - [Third-party software](THIRD_PARTY.md) and the [Blender scripts' licence note](blender/LICENSE-NOTE.md).
 
-## The name
-
-Generative Stage was formerly called Dramatis Fabrica. The display name is one constant in the web app
-(`ui/src/app/brand.ts`) plus the page title in `ui/src/index.html`. For one release the older names still work:
-
-- the environment variables `DRAMATIS_*` (now `GENSTAGE_*`), `DF_*` (the ports and proxy targets, now
-  `GENSTAGE_*`) and `STUDIO_MACHINE_CONFIG` (now `GENSTAGE_SERVER_CONFIG`), each with a one-line note on stderr when used;
-- the settings files `~/.config/dramatis-fabrica/server.json` and `machine.json`, each read while the same file under
-  `~/.config/generative-stage` is missing, and the folders `~/.local/share/dramatis-fabrica` and
-  `~/.cache/dramatis-fabrica`, read while the `generative-stage` folder beside them is missing.
-  `python3 scripts/migrate_home.py --dry-run` shows what moving them would do; without `--dry-run` it moves them and
-  rewrites the paths in their settings files;
-- vocabulary files whose format is `dramatis-vocabulary` (now `generative-stage-vocabulary`);
-- export bundles whose format is `dramatis-fabrica-bundle` (bundles are now written as `generative-stage-bundle`).
-
 ## Licence
 
 MIT, see [LICENSE](LICENSE). The scripts in `blender/` use Blender's Python API and are offered under MIT or

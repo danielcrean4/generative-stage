@@ -7,7 +7,7 @@
   "additionalProperties": false,
   "required": ["format", "format_version", "project", "selection", "kinds", "link_types", "entities", "links"],
   "properties": {
-    "format": {"enum": ["generative-stage-bundle", "dramatis-fabrica-bundle"], "description": "The tool writes generative-stage-bundle; dramatis-fabrica-bundle, the id from before the rename, is still read"},
+    "format": {"const": "generative-stage-bundle"},
     "format_version": {"const": 1},
     "project": {
       "type": "object",

@@ -14,16 +14,9 @@ and opened through the world-model API ([world model API](../../docs/api.md)).
 
 The tool looks for the file in this order and uses the first one it finds:
 
-1. the path in the environment variable `GENSTAGE_SERVER_CONFIG` (the file must exist). For one release the older
-   name `STUDIO_MACHINE_CONFIG` is still read, with a one-line note on stderr;
+1. the path in the environment variable `GENSTAGE_SERVER_CONFIG` (the file must exist);
 2. `~/.config/generative-stage/server.json`;
 3. built-in defaults.
-
-While the file `~/.config/generative-stage/server.json` does not exist, step 2 reads the same file under the tool's
-earlier name, `~/.config/dramatis-fabrica/server.json`. The fallback is per file, so a `server.json` that has not moved
-is still found after the pipeline's `machine.json` (or the data folder) has. The default `data_dir` falls back to
-`~/.local/share/dramatis-fabrica` while `~/.local/share/generative-stage` is missing. A note on stderr names what was
-used; `scripts/migrate_home.py` moves the `dramatis-fabrica` folders.
 
 The tool never creates the file. Every key is optional; a key you leave out keeps its default.
 Paths may start with `~`; a relative path is taken from the folder holding the file.

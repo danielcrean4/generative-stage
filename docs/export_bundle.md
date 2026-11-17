@@ -17,8 +17,7 @@ images. `<slot>` is the choice's slot (`main` unless the person chose another, s
 ## The manifest
 
 `manifest.json` is checked against `export/manifest.schema.json` (JSON Schema 2020-12, shipped
-with the tool) before anything is written. `format` is `generative-stage-bundle`; a reader should also accept
-`dramatis-fabrica-bundle`, the id from before the tool was renamed.
+with the tool) before anything is written. `format` is `generative-stage-bundle`.
 
 ```json
 {

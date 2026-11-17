@@ -67,19 +67,13 @@ def test_the_fixture_loads_and_paths_match_patterns(vocab: Vocabulary) -> None:
     assert vocab.entity_kinds("mark") == ((), "key")
 
 
-def test_the_format_id_from_before_the_rename_is_read(folder: Path) -> None:
-    raw = json.loads((folder / VOCABULARY_FILE).read_text())
-    raw["format"] = "dramatis-vocabulary"
-    assert parse(raw, folder / VOCABULARY_FILE).raw["format"] == "dramatis-vocabulary"
-
-
 @pytest.mark.parametrize(
     ("change", "pointer", "words"),
     [
         (
             lambda v: v.update(format="other"),
             "/format",
-            "is not one of ['generative-stage-vocabulary', 'dramatis-vocabulary']",
+            "was expected",
         ),
         (lambda v: v["facts"][0].update(type="float"), "/facts/0/type", "not one of the types"),
         (lambda v: v["facts"].append(dict(v["facts"][0])), "/facts/8/pattern", "listed twice"),

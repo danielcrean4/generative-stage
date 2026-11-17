@@ -116,6 +116,5 @@ adding adapters and host answers. See [platforms](platform.md).
 
 ## Where the name appears
 
-The interface reads the product name from one constant (`ui/src/app/brand.ts`); the README's "The name" lists the older
-names still read for one release. Some identifiers still say "Studio" (`studio.project.json`, the `X-Studio-Request`
+The interface reads the product name from one constant (`ui/src/app/brand.ts`). Some identifiers still say "Studio" (`studio.project.json`, the `X-Studio-Request`
 header, the `studio` command) because they name a file format or a protocol rather than the product.

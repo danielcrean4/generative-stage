@@ -7,7 +7,7 @@
   "required": ["format", "format_version", "types", "facts", "operators"],
   "additionalProperties": false,
   "properties": {
-    "format": {"enum": ["generative-stage-vocabulary", "dramatis-vocabulary"], "description": "dramatis-vocabulary is the id used before the rename; both are read"},
+    "format": {"const": "generative-stage-vocabulary"},
     "format_version": {"const": 1},
     "source": {"type": "string", "maxLength": 500, "description": "What made this file, for people"},
     "types": {

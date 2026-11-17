@@ -95,13 +95,11 @@ def test_the_example_holds_no_project_content() -> None:
     assert names == ["README.md", "__init__.py", "godot_import.py"]
 
 
-def test_both_format_ids_are_read(bundle: tuple[Path, dict[str, str]], tmp_path: Path) -> None:
+def test_only_the_bundle_format_id_is_read(bundle: tuple[Path, dict[str, str]], tmp_path: Path) -> None:
     source, _ = bundle
     manifest = json.loads((source / MANIFEST).read_text())
     assert manifest["format"] == "generative-stage-bundle"  # what the tool writes
-    manifest["format"] = "dramatis-fabrica-bundle"  # the id from before the rename
-    (source / MANIFEST).write_text(json.dumps(manifest))
-    assert main([str(source), str(tmp_path / "old-id")]) == 0
+    assert main([str(source), str(tmp_path / "bundle-id")]) == 0
     manifest["format"] = "other-bundle"
     (source / MANIFEST).write_text(json.dumps(manifest))
     assert main([str(source), str(tmp_path / "other-id")]) == 1

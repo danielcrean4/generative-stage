@@ -1,7 +1,7 @@
 """Where this computer keeps the pipeline's models, interpreters and GPU lock. Nothing is guessed.
 
 The file is JSON: the one named by the environment variable GENSTAGE_MACHINE_CONFIG (it must exist), else
-~/.config/generative-stage/machine.json (old_names.py reads the names used before the rename). A key whose file is missing is an error that names the key and the file,
+~/.config/generative-stage/machine.json. A key whose file is missing is an error that names the key and the file,
 raised where the path is first needed, so a tool that never needs a model never asks for one. `~` in a value means
 the home folder; a relative value is taken from the file's folder.
 
@@ -18,12 +18,8 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import old_names  # noqa: E402
-
 CONFIG_ENV = "GENSTAGE_MACHINE_CONFIG"
-CONFIG_NAME = "MACHINE_CONFIG"  # CONFIG_ENV without its prefix, for old_names.env
-DEFAULT_NAME = "machine.json"  # in old_names.home_dir(".config")
+DEFAULT_NAME = "machine.json"  # in ~/.config/generative-stage
 KEYS = ("gpu_lock", "icon_dir", "tools_python")  # path keys
 VALUE_KEYS = ("adapters", "defaults")  # structured keys; adapter_config.py validates them
 
@@ -35,13 +31,13 @@ class MachineError(RuntimeError):
 def config_file(environ=None, home=None):
     environ = os.environ if environ is None else environ
     home = Path.home() if home is None else Path(home)
-    named = old_names.env(CONFIG_NAME, environ)
+    named = environ.get(CONFIG_ENV)
     if named:
         file = Path(named).expanduser()
         if not file.is_file():
             raise MachineError(f"env {CONFIG_ENV} names {named}, which is not a file")
         return file
-    return old_names.home_file(".config", DEFAULT_NAME, home)
+    return home / ".config" / "generative-stage" / DEFAULT_NAME
 
 
 def load(environ=None, home=None):

@@ -4,5 +4,5 @@
  */
 export const PRODUCT_NAME = 'Generative Stage';
 
-/** Browser-storage keys are deliberately free of the product name, so a rename never needs a migration. */
+/** Browser-storage keys are deliberately free of the product name. */
 export const PROJECT_KEY = 'app.current-project';

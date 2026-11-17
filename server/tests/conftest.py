@@ -1,6 +1,7 @@
 """Pytest configuration: no test may change the built-in default registry of projects."""
 
 import json
+import os
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -33,11 +34,10 @@ def _tools_python() -> Path | None:
     import subprocess
 
     import machine  # type: ignore[import-not-found]
-    import old_names  # type: ignore[import-not-found]
 
     import authoring.pipeline_catalog  # noqa: F401 - puts pipeline/ on the path
 
-    named = old_names.env("TEST_TOOLS_PYTHON")
+    named = os.environ.get("GENSTAGE_TEST_TOOLS_PYTHON")
     try:
         python = Path(named) if named else Path(machine.tools_python())
     except Exception:  # noqa: BLE001 - any trouble reading the settings means: not available

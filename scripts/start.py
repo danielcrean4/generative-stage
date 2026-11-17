@@ -3,13 +3,13 @@
     cd server && uv run python ../scripts/start.py [--host 127.0.0.1] [--api-port 8780] [--readonly-port 8781]
                                                     [--web-port 4280] [--ui DIR]
 
-Ports come from the options, else GENSTAGE_API_PORT, GENSTAGE_READONLY_PORT, GENSTAGE_WEB_PORT (or their older
-names DF_*), else 8780, 8781, 4280. Run through ./start.sh, which does the `cd` and the environment. Each server binds
+Ports come from the options, else GENSTAGE_API_PORT, GENSTAGE_READONLY_PORT, GENSTAGE_WEB_PORT else 8780, 8781, 4280. Run through ./start.sh, which does the `cd` and the environment. Each server binds
 the loopback only; `--host` (for the container) is the web app's address alone. A port that is taken stops the start
 with a message before anything runs.
 """
 
 import argparse
+import os
 import signal
 import socket
 import subprocess
@@ -21,8 +21,6 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 SERVER = REPO / "server"
 UI = REPO / "ui" / "dist" / "generative-stage-ui" / "browser"
-sys.path.insert(0, str(REPO / "pipeline"))
-import old_names  # noqa: E402
 RESERVED = {4200, 8765, 8766, 8775, 8776}  # a live install may hold these; never default to them
 
 
@@ -49,7 +47,7 @@ def wait_for(url: str, process: subprocess.Popen[bytes], seconds: int = 30) -> N
 
 
 def env_port(name: str, default: int) -> int:
-    return int(old_names.env(name, older=(old_names.PORT_PREFIX,)) or default)
+    return int(os.environ.get(f"GENSTAGE_{name}") or default)
 
 
 def main() -> int:

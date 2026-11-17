@@ -1,27 +1,18 @@
 """Machine config: where this computer keeps the Studio's working folders. The one owner of those paths;
 docs/configuration.md lists every key.
 
-Load order: the file named by env GENSTAGE_SERVER_CONFIG (it must exist; the older name
-STUDIO_MACHINE_CONFIG is still read, with a note), else ~/.config/generative-stage/server.json if
-present, else the built-in defaults below. While that file is missing, the server.json of
-~/.config/dramatis-fabrica (the tool's earlier name) is read instead, file by file
-(pipeline/old_names.py); the default data_dir falls back to the older data folder while the new one is
-missing. Build one MachineConfig in main() and pass it to whatever needs a path; nothing here is a global.
+Load order: the file named by env GENSTAGE_SERVER_CONFIG (it must exist), else ~/.config/generative-stage/server.json if
+present, else the built-in defaults below. Build one MachineConfig in main() and pass it to whatever needs a path; nothing here is a global.
 """
 
 import json
 import os
-import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "pipeline"))
-import old_names  # noqa: E402
-
 ENV_VAR = "GENSTAGE_SERVER_CONFIG"
-OLD_ENV_VAR = "STUDIO_MACHINE_CONFIG"  # read, with a note, until the release after the rename
-DEFAULT_NAME = "server.json"  # in ~/.config/generative-stage (old_names.home_file)
+DEFAULT_NAME = "server.json"  # in ~/.config/generative-stage (under ~/.config/generative-stage)
 BUILT_IN = "built-in defaults (no machine config file found)"
 
 # Every path key. data_dir defaults to the data folder (default_data_dir); runs_root and
@@ -98,13 +89,11 @@ def parse_machine_config(raw: object, source: str, base: Path, home: Path) -> Ma
 
 
 def default_data_dir(home: Path) -> Path:
-    folder: Path = old_names.home_dir(".local/share", home)
-    return folder
+    return home / ".local/share" / "generative-stage"
 
 
 def _config_file(home: Path) -> Path:
-    file: Path = old_names.home_file(".config", DEFAULT_NAME, home)
-    return file
+    return home / ".config" / "generative-stage" / DEFAULT_NAME
 
 
 def load_machine_config(
@@ -113,7 +102,7 @@ def load_machine_config(
     """The machine config for this run. `env` and `home` exist so a check can pass its own."""
     env = os.environ if env is None else env
     home = Path.home() if home is None else home
-    named = old_names.renamed_env(ENV_VAR, OLD_ENV_VAR, env)
+    named = env.get(ENV_VAR)
     if named:
         file = Path(named).expanduser()
         if not file.is_file():

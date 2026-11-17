@@ -55,6 +55,6 @@ cache_dir = "/tmp/.pytest_cache"
 
 [[tool.mypy.overrides]]
 # The pipeline's modules are plain, untyped Python (the pipeline checks their own contracts); the server only reads them.
-module = ["adapter_config", "adapter_run", "host", "kit_table", "old_names", "param_gates", "param_run", "pipeline_file", "pipeline_resolve"]
+module = ["adapter_config", "adapter_run", "host", "kit_table", "param_gates", "param_run", "pipeline_file", "pipeline_resolve"]
 ignore_missing_imports = true
 follow_imports = "skip"

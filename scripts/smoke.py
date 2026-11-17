@@ -183,7 +183,7 @@ def walkthrough(smoke: Smoke, args: argparse.Namespace, folder: Path, made: list
     with zipfile.ZipFile(io.BytesIO(archive)) as bundle:
         members = bundle.namelist()
         manifest = json.loads(bundle.read("manifest.json"))
-    if status != 200 or manifest["format"] not in ("generative-stage-bundle", "dramatis-fabrica-bundle") or not any(m.endswith(".glb") for m in members):
+    if status != 200 or manifest["format"] != "generative-stage-bundle" or not any(m.endswith(".glb") for m in members):
         raise SystemExit(f"FAIL export bundle: {status} {members}")
     smoke.ok(f"export bundle {exported['id']}: manifest and {sum(m.endswith('.glb') for m in members)} glTF model, {exported['links']} links")
 

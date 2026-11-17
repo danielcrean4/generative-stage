@@ -1,8 +1,7 @@
 // Where the dev server sends /api calls. Defaults: the main API on 8780, the read-only API on 8781.
 // To change them, set GENSTAGE_API_TARGET and GENSTAGE_READONLY_TARGET (full addresses, such as
 // http://127.0.0.1:4311), or put {"api": "...", "readonly": "..."} in ui/proxy.local.json
-// (not committed). The environment wins over the file; either may set just one. The older names
-// DF_API_TARGET and DF_READONLY_TARGET are still read, with a note, for one release.
+// (not committed). The environment wins over the file; either may set just one.
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -41,13 +40,7 @@ function check(source, name, value) {
 
 function fromEnvironment(env, key) {
   const name = `GENSTAGE_${key.toUpperCase()}_TARGET`;
-  const old = `DF_${key.toUpperCase()}_TARGET`;
-  if (env[name]) return [name, env[name]];
-  if (env[old]) {
-    console.warn(`note: ${old} is deprecated and will stop working; set ${name} instead`);
-    return [old, env[old]];
-  }
-  return [name, undefined];
+  return [name, env[name]];
 }
 
 function proxyTargets(env = process.env, file = LOCAL_FILE) {

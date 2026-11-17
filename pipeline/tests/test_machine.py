@@ -1,17 +1,14 @@
 """Machine settings (machine.py): where models, interpreters and the GPU lock live. Nothing is guessed."""
-import io
 import json
 import re
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import gpu_lock  # noqa: E402
 import machine  # noqa: E402
-import old_names  # noqa: E402
 
 PIPELINE = Path(__file__).resolve().parents[1]
 
@@ -42,29 +39,6 @@ class MachineConfigTests(unittest.TestCase):
         (self.home / ".config/generative-stage").mkdir(parents=True)
         (self.home / ".config/generative-stage/machine.json").write_text(json.dumps({"gpu_lock": "~/lock"}))
         self.assertEqual(machine.path("gpu_lock", {}, self.home), self.home / "lock")
-
-    def test_the_file_used_before_the_rename_is_read_while_the_new_one_is_missing(self):
-        old = self.home / ".config" / old_names.OLD_FOLDERS[0]
-        old.mkdir(parents=True)
-        (old / "machine.json").write_text(json.dumps({"gpu_lock": "~/old-lock"}))
-        new = self.home / ".config/generative-stage"
-        new.mkdir(parents=True)
-        (new / "server.json").write_text("{}")  # another file has moved; this one has not: it is still found
-        with redirect_stderr(io.StringIO()) as err:
-            self.assertEqual(machine.path("gpu_lock", {}, self.home), self.home / "old-lock")
-        self.assertIn("migrate_home.py", err.getvalue())
-        (new / "machine.json").write_text("{}")  # once the new file exists, only it is read
-        self.assertEqual(machine.config_file({}, self.home), new / "machine.json")
-
-    def test_the_variable_used_before_the_rename_is_read_with_a_note(self):
-        file = self.write({"gpu_lock": "/lock"})
-        old_variable = old_names.OLD_PREFIX + machine.CONFIG_NAME
-        old_names._noted.clear()  # the note is printed once per process
-        with redirect_stderr(io.StringIO()) as err:
-            self.assertEqual(machine.config_file({old_variable: str(file)}, self.home), file)
-        self.assertIn(machine.CONFIG_ENV, err.getvalue())
-        other = self.write({}, "other.json")  # the new name wins over the old one
-        self.assertEqual(machine.config_file({old_variable: str(file), machine.CONFIG_ENV: str(other)}, self.home), other)
 
     def test_a_missing_key_names_the_key_and_the_file(self):
         file = self.write({})

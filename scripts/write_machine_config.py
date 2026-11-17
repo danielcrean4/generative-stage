@@ -15,7 +15,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
 import machine  # noqa: E402
-import old_names  # noqa: E402
 
 DEFAULTS = {
     "image": "standin-image",
@@ -31,7 +30,7 @@ def target(named: str | None) -> Path:
     try:
         return machine.config_file()
     except machine.MachineError:  # the variable names a file that is not there yet: that is the file to write
-        return Path(old_names.env(machine.CONFIG_NAME) or "").expanduser()
+        return Path(os.environ.get(machine.CONFIG_ENV) or "").expanduser()
 
 
 def main() -> int:
