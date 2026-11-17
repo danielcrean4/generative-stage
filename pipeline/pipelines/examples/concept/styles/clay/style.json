@@ -1,0 +1,13 @@
+{
+  "id": "clay",
+  "name": "Clay model",
+  "version": 1,
+  "extends": null,
+  "prompt": {
+    "templates": {
+      "concept": "{subject}, {motif}, hand-sculpted matte clay model, rounded forms, soft studio light"
+    },
+    "negative": "text, watermark"
+  },
+  "terms": ["clay", "sculpted", "matte"]
+}
