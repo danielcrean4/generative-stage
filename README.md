@@ -3,7 +3,7 @@
 A local tool for building the cast, places and props of a story world, and for turning each written brief into
 concept images, 3D models and motion clips with a record of exactly how every result was made.
 
-![A procedural model in the viewer](docs/img/viewer.png)
+![The trace of a run: every stage, its prompt and where each word came from](docs/img/trace.png)
 
 You describe a world as linked records: a character *lives in* a setting, a prop *belongs to* a character. A pipeline
 turns a record's brief into assets, stage by stage. Every stage writes down what it read and what it made, so any
@@ -22,8 +22,8 @@ It is a work in progress. Names, layout and interfaces may change.
 
 | | |
 |---|---|
-| ![The trace of a run](docs/img/trace.png) | **A trace for every run.** Each stage shows its prompt, colour-coded by where each part came from (the brief, the style pack, the motif, the pipeline), its settings, and its files with their hashes. |
-| ![The shape gate](docs/img/gate.png) | **Checks that inform, not block.** Gates measure a result (is the subject whole, is the mesh closed, is it the right size) and show value, limit and margin. The choice stays with you. |
+| ![A record with its chosen model](docs/img/viewer.png) | **A world of linked records.** Each record has a brief, fields from its kind's schema, notes, history and links; its chosen picture and model sit beside it, with a viewer. (The sphere is the stand-in's output.) |
+| ![The shape gate](docs/img/gate.png) | **A trace for every run, and checks that inform, not block.** Each stage shows its prompt, colour-coded by source, its settings, and its files with their hashes. Gates measure a result (is the subject whole, is the mesh closed, is it the right size) against limits; the choice stays with you. |
 | ![A rigged character](docs/img/character.png) | **Rigging and motion.** Headless Blender scripts rig a character and build clips procedurally; the viewer plays them. |
 | ![Statistics](docs/img/statistics.png) | **Statistics from plain files.** Runs over time, time per stage, completed against errored, made against chosen. |
 

@@ -32,7 +32,7 @@
                       <img class="hero-img" [src]="s.url" [alt]="entity.title + ', ' + label(slot())" (error)="imageFailed(s.url)" data-testid="hero-image" />
                     } @else if (shownKind() === 'model') {
                       <app-model-viewer [url]="s.url" [name]="name(s.candidate)" />
-                      <p class="frame-text file-line"><span>{{ w.model(name(s.candidate)) }}</span> <a [href]="s.url" download data-testid="hero-file">{{ w.download }}</a></p>
+                      <p class="frame-text file-line"><span [title]="w.model(name(s.candidate))">{{ w.model(name(s.candidate)) }}</span> <a [href]="s.url" download data-testid="hero-file">{{ w.download }}</a></p>
                     } @else {
                       <p class="frame-text"><span>{{ w.otherFile(name(s.candidate)) }}</span> <a [href]="s.url" download>{{ w.download }}</a></p>
                     }
