@@ -328,10 +328,11 @@ def test_a_pipeline_runs_on_the_stand_in_and_leaves_a_trace(
         found.close()
 
 
-def test_a_head_that_fails_its_shape_gate_is_a_failed_run_that_says_which_measure(
+def test_a_head_run_on_the_stand_ins_passes_its_shape_gate_because_the_mesh_matches_its_picture(
     tmp_path: Path, standin_environment: Path
 ) -> None:
-    """The stand-in mesh is a sphere, so the head pipeline's shape gate stops it; the run says so and makes no candidate."""
+    """The stand-in mesh is raised from the picture's own outline, so the head pipeline's shape gate measures it for real
+    and passes it; the run makes candidates and its trace shows the gate."""
     found = Running(tmp_path)
     try:
         record = entity(found.api, found.project, "character", "Ines")
@@ -339,18 +340,14 @@ def test_a_head_that_fails_its_shape_gate_is_a_failed_run_that_says_which_measur
         made = found.api.ok("POST", f"{found.project}/entities/{record['id']}/jobs", request, 202)
         done = finished(found, made)
         run = done["runs"][0]
-        assert run["status"] == "failed" and done["candidates"] == []
-        assert "above max_" in run["log_tail"] and "seed 5: failed, 0 file(s)" in run["log_tail"]
+        assert run["status"] == "succeeded", run["log_tail"]
+        assert done["candidates"] and "seed 5: generated" in run["log_tail"]
         assert [s["label"] for s in run["steps"]][:2] == ["Concept bust", "Crop to head and neck"]
-        # the failed run is attached to the entity, so its trace can be opened
         runs = found.api.ok("GET", f"{found.project}/entities/{record['id']}/runs")["runs"]
         assert [r["run_id"] for r in runs] == [made["job"]["id"]]
         base = f"{found.project}/entities/{record['id']}/runs/{made['job']['id']}"
         trace = found.api.ok("GET", f"{base}/trace")
-        assert trace["status"] == "failed" and trace["stages"][0]["prompt_parts"]
-        assert run["steps"][-1]["status"] == "failed" or "failed" in {
-            s["status"] for s in run["steps"]
-        }
+        assert trace["status"] != "failed" and trace["stages"][0]["prompt_parts"]
     finally:
         found.close()
 

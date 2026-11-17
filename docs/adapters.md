@@ -248,11 +248,16 @@ never a run with the network open.
 `adapters/standin/` is built in: four entries (`standin-image`, `standin-mesh`, `standin-text`, `standin-review`) that
 run `adapters/standin/standin.py` under `{python}` with the Python standard library only, and two (`standin-rig`,
 `standin-motion`) that run `adapters/standin/standin_blender.py`, which runs one script in background Blender. No model,
-CPU only, the same output for the same input; the first four take well under a second per call, the Blender two a
+CPU only, the same output for the same input; the first four take a second or two per call at most, the Blender two a
 second or two:
 
-- image: a PNG of the asked size, one round subject in a colour taken from the prompt and seed, on white;
-- image-to-mesh: a closed sphere of 960 faces as `.glb`, with normals and vertex colours;
+- image: a PNG of the asked size: a procedural drawing, made by code, of the subject the prompt's words point to (a stringed
+  instrument, a lantern, a book, a standing figure, a vessel, or a cut gem for anything else), lit like clay and centred on
+  white, its proportions and palette varied by the seed and the prompt. The words and the families are one table at the
+  top of `adapters/standin/standin_subjects.py`;
+- image-to-mesh: a closed solid of a few thousand faces as `.glb`, raised from the image's own silhouette (the outline is
+  inflated into a pillow, mirrored front and back) with normals and vertex colours taken from the image's pixels, so it
+  matches what the picture shows and the shape gate measures it for real;
 - text: a few lines that name the prompt and seed;
 - review: `{"id", "score", "findings", "uncertainty"}`; the score comes from the image's hash;
 - rig (`blender/rig_standin.py`): fits the example biped profile (`blender/examples/rigs/biped.json`) to the mesh by its
@@ -270,5 +275,5 @@ The two Blender entries require `blender`: without it on PATH the stage stops wi
 
 Its outputs pass the pipeline's later stages, so `pipeline/pipelines/examples/prop.pipeline.json` and
 `character.pipeline.json` (the same, then rigged, gated and animated) run end to end on a computer with no model (the
-image and mesh tools need `tools_python`; the character's last stages need Blender). On the stand-in's sphere the
-character is a rigged ball that walks; give the rig stage a body-shaped mesh for something that looks like one.
+image and mesh tools need `tools_python`; the character's last stages need Blender). On the stand-in the
+character is the drawn standing figure raised into a solid, rigged, and it walks.

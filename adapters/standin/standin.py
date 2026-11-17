@@ -8,28 +8,33 @@
 Each writes what a real adapter of its kind writes, shaped the same way, plus `identity.json` beside the output (the
 model identity it reports):
 
-    image   an RGB PNG of the asked size: one round subject, its colour from the prompt and seed, on plain white
-    mesh    a small closed sphere as a binary glTF (.glb) with normals and vertex colours, coloured from the image
+    image   an RGB PNG of the asked size: a procedural drawing of the subject the prompt's words point to (a stringed
+            instrument, a lantern, a book, a standing figure, a vessel, or a cut gem for anything else), centred on
+            plain white, its proportions and palette varied by the seed and the prompt (standin_subjects.py)
+    mesh    a closed solid raised from the image's silhouette and coloured from its pixels, as a binary glTF (.glb) with
+            normals and vertex colours (standin_solid.py)
     text    a few plain lines that name the prompt and seed
     review  {"id", "score", "findings", "uncertainty"}, the shape of a local picture review; the score is from the
             image's hash, so it says nothing about the picture
 
-The output tells a person straight away that no model ran. The pipeline's later stages (tidy, matte, mesh clean-up,
-decimation, the shape gate) accept it, so a whole pipeline runs on a computer with no model installed.
+Nothing is learned or downloaded: the pictures are drawn by code. The output tells a person straight away that no model
+ran. The pipeline's later stages (tidy, matte, mesh clean-up, decimation, the shape gate) accept it, so a whole pipeline
+runs on a computer with no model installed.
 """
 import argparse
 import hashlib
 import json
-import math
 import struct
 import sys
 import zlib
 from pathlib import Path
 
-VERSION = 1
-BACKGROUND = (255, 255, 255)
-SUBJECT_SHARE = 0.3  # the subject's radius as a share of the shorter side
-STACKS, SLICES = 16, 32  # sphere rings and segments: 960 faces
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # python -I does not add the script's folder
+import standin_solid  # noqa: E402
+import standin_subjects as subjects  # noqa: E402
+from standin_paint import Canvas, dice  # noqa: E402
+
+VERSION = 2
 
 
 def seeded(*parts):
@@ -39,11 +44,6 @@ def seeded(*parts):
         digest.update(part if isinstance(part, bytes) else str(part).encode())
         digest.update(b"\0")
     return digest.digest()
-
-
-def colour(digest):
-    """A mid-tone colour from DIGEST: never near white, so it stands out from the background."""
-    return tuple(50 + digest[i] % 150 for i in range(3))
 
 
 def png(width, height, rows):
@@ -56,50 +56,20 @@ def png(width, height, rows):
 
 
 def image(prompt, seed, width, height):
-    """PNG bytes: a filled disc of one colour, centred, on white."""
-    fill, back = bytes(colour(seeded("image", prompt, seed))), bytes(BACKGROUND)
-    radius = SUBJECT_SHARE * min(width, height)
-    cx, cy = width / 2, height / 2
-    rows = []
-    for y in range(height):
-        dy = y + 0.5 - cy
-        if abs(dy) >= radius:
-            rows.append(back * width)
-            continue
-        half = math.sqrt(radius * radius - dy * dy)
-        left, right = max(0, round(cx - half)), min(width, round(cx + half))
-        rows.append(back * left + fill * (right - left) + back * (width - right))
-    return png(width, height, rows)
+    """PNG bytes: a procedural drawing of the subject the prompt's words point to, centred on plain white."""
+    canvas = Canvas(width, height)
+    subjects.draw(canvas, subjects.family_for(prompt), dice(seeded("image", prompt, seed)))
+    return png(width, height, canvas.rows())
 
 
-def sphere():
-    """(positions, normals, triangles) of a closed unit sphere with no repeated vertex."""
-    points = [(0.0, 1.0, 0.0)]
-    for ring in range(1, STACKS):
-        theta = math.pi * ring / STACKS
-        for step in range(SLICES):
-            phi = 2 * math.pi * step / SLICES
-            points.append((math.sin(theta) * math.cos(phi), math.cos(theta), math.sin(theta) * math.sin(phi)))
-    points.append((0.0, -1.0, 0.0))
-    south = len(points) - 1
-
-    def at(ring, step):
-        return 1 + (ring - 1) * SLICES + step % SLICES
-
-    triangles = [(0, at(1, s + 1), at(1, s)) for s in range(SLICES)]
-    for ring in range(1, STACKS - 1):
-        for s in range(SLICES):
-            a, b, c, d = at(ring, s), at(ring, s + 1), at(ring + 1, s), at(ring + 1, s + 1)
-            triangles += [(a, b, c), (b, d, c)]
-    triangles += [(south, at(STACKS - 1, s), at(STACKS - 1, s + 1)) for s in range(SLICES)]
-    return points, points, triangles
-
-
-def glb(points, normals, triangles, rgb):
-    """A binary glTF 2.0 file: one mesh, one primitive (positions, normals, vertex colours, uint32 indices)."""
+def glb(points, normals, triangles, colours):
+    """A binary glTF 2.0 file: one mesh, one primitive (positions, normals, vertex colours, uint32 indices). COLOURS is
+    one (r, g, b) in 0..255 for the whole mesh, or one (r, g, b) in 0..1 per vertex."""
     vertex = b"".join(struct.pack("<3f", *p) for p in points)
     normal = b"".join(struct.pack("<3f", *n) for n in normals)
-    tint = struct.pack("<4f", *(c / 255 for c in rgb), 1.0) * len(points)
+    if colours and isinstance(colours[0], (int, float)):  # one 0..255 colour for every vertex
+        colours = [tuple(c / 255 for c in colours)] * len(points)
+    tint = b"".join(struct.pack("<4f", *c, 1.0) for c in colours)
     index = b"".join(struct.pack("<3I", *t) for t in triangles)
     blobs, views, offset = [vertex, normal, tint, index], [], 0
     for blob in blobs:
@@ -131,8 +101,8 @@ def glb(points, normals, triangles, rgb):
 
 
 def mesh(image_bytes, seed):
-    points, normals, triangles = sphere()
-    return glb(points, normals, triangles, colour(seeded("mesh", image_bytes, seed)))
+    points, normals, triangles, colours = standin_solid.build(image_bytes)
+    return glb(points, normals, triangles, colours)
 
 
 def text(prompt, seed):

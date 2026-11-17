@@ -63,6 +63,18 @@
       }
     },
     {
+      "key": "fiddle",
+      "kind": "prop",
+      "data": {
+        "name": "Driftwood Fiddle",
+        "brief": "A four-string fiddle with a salt-bleached maple body, a scroll carved like a curling wave and worn brass pegs, kept on a hook by the stove and played when the weather is too rough for sleep.",
+        "tags": ["music", "wood"],
+        "material": "maple, spruce and brass",
+        "size": "hand",
+        "condition": "bleached by salt, one string replaced with fishing line"
+      }
+    },
+    {
       "key": "lighting-up",
       "kind": "script",
       "data": {
@@ -82,7 +94,9 @@
     {"type": "lives_in", "source": "ines", "target": "lighthouse"},
     {"type": "belongs_to", "source": "lantern", "target": "ines"},
     {"type": "belongs_to", "source": "notebook", "target": "ines"},
-    {"type": "found_in", "source": "lantern", "target": "lighthouse"}
+    {"type": "belongs_to", "source": "fiddle", "target": "ines"},
+    {"type": "found_in", "source": "lantern", "target": "lighthouse"},
+    {"type": "found_in", "source": "fiddle", "target": "lighthouse"}
   ],
   "notes": [
     {"entity": "lantern", "text": "Brief for the first run: a brass lantern on a plain background, three-quarter view."}

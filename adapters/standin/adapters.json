@@ -3,7 +3,7 @@
     {
       "id": "standin-image",
       "kind": "image",
-      "description": "A round subject on white; no model.",
+      "description": "A procedural drawing of the subject the prompt's words point to (instrument, lantern, book, figure, vessel or gem), on white; no model.",
       "argv": [
         "{python}",
         "-I",
@@ -34,7 +34,7 @@
     {
       "id": "standin-mesh",
       "kind": "image-to-mesh",
-      "description": "A small closed sphere coloured from the image; no model.",
+      "description": "A closed solid raised from the image's silhouette and coloured from its pixels; no model.",
       "argv": [
         "{python}",
         "-I",

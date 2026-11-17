@@ -55,8 +55,8 @@ Open **Brass Signal Lantern** and press **Generate** in the picture panel. Leave
 concept image*, adjust the prompt if you like, and press **Start**. The steps run one after another: concept image,
 tidy, find the subject, image to mesh, clean and size the mesh, reduce it, shape gate. The picture the run made appears
 under **Candidates** on the **Image** tab: click it to preview it and press **Use this** to choose it. The model is a candidate
-on the **3D** tab; choose it the same way, and the tab then shows it in the bundled viewer (drag to turn, scroll to zoom). On the stand-in the picture is a coloured disc and the model
-a sphere: the point is that the whole chain, including its checks, runs with no model.
+on the **3D** tab; choose it the same way, and the tab then shows it in the bundled viewer (drag to turn, scroll to zoom). On the stand-in the picture is a procedural drawing chosen from the words of the brief (a lantern here) and the model is raised from
+that drawing's silhouette, with no model anywhere: the point is that the whole chain, including its checks, runs on a computer with none.
 
 To rig and animate a character, run **Animated characters from a concept image** on **Ines Marlow** (needs `blender` on
 your path). The 3D tab then has a clip player with the walk and other clips.
