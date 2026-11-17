@@ -256,8 +256,11 @@ second or two:
   white, its proportions and palette varied by the seed and the prompt. The words and the families are one table at the
   top of `adapters/standin/standin_subjects.py`;
 - image-to-mesh: a closed solid of a few thousand faces as `.glb`, raised from the image's own silhouette (the outline is
-  inflated into a pillow, mirrored front and back) with normals and vertex colours taken from the image's pixels, so it
-  matches what the picture shows and the shape gate measures it for real;
+  inflated into a flat plate with a rounded edge, mirrored front and back, thinner where the shape is narrow) with
+  normals and vertex colours taken from the image's pixels. The front is meshed finely where the picture has detail
+  (strings, pegs, a sound hole) and coarsely elsewhere, up to the face budget, and the painter's own shading is divided
+  out of the stored colours so the viewer's light is the only light. The clean-up stages keep vertex colours but not
+  textures, so colour detail is carried by vertices;
 - text: a few lines that name the prompt and seed;
 - review: `{"id", "score", "findings", "uncertainty"}`; the score comes from the image's hash;
 - rig (`blender/rig_standin.py`): fits the example biped profile (`blender/examples/rigs/biped.json`) to the mesh by its
