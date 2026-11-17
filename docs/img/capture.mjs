@@ -3,9 +3,9 @@
 //   node docs/img/capture.mjs http://127.0.0.1:4280
 //
 // Start from a fresh install with the example loaded (`python3 scripts/load_example.py <address>`), then, through the
-// Generate panel or the API, run the `prop` pipeline on "Brass Signal Lantern" and "Tide Table Notebook" and the
+// Generate panel or the API, run the `prop` pipeline on "Driftwood Fiddle", "Brass Signal Lantern" and "Tide Table Notebook" and the
 // `character` pipeline on "Ines Marlow" (stand-in generators, seed 7), and choose each run's image and 3D model.
-// The Generate shot starts one more prop run, so it comes last; Statistics is taken before it.
+// The hero shots (viewer, trace, gate, generate) show the fiddle. The Generate shot starts one more prop run, so it comes last; Statistics is taken before it.
 //
 // Needs Playwright's Chromium (`cd ui && npx playwright install chromium`). Images are written next to this file:
 // 1440 CSS px wide at device scale 2. Each shot is cropped to the part of the screen worth showing.
@@ -60,7 +60,7 @@ await shot('records.png');
 
 // viewer.png: the 3D tab with the chosen model, the title and the fields beside it
 await resize();
-await open('/world/prop', 'Brass Signal Lantern');
+await open('/world/prop', 'Driftwood Fiddle');
 await showModel();
 await shot('viewer.png', { x: 0, y: 0, width: 1440, height: 760 });
 
@@ -89,7 +89,7 @@ await settled(1200);
 await shot('character.png', { x: 0, y: 0, width: 1440, height: 840 });
 
 // trace.png: the stage strip, then the Concept image stage: outputs, prompt and the colour legend
-await open('/world/prop', 'Brass Signal Lantern');
+await open('/world/prop', 'Driftwood Fiddle');
 await page.getByText('See how it was made').first().click();
 await page.getByText('Shape gate').first().waitFor();
 await settled();
@@ -113,7 +113,7 @@ await settled(1000);
 await shot('statistics.png', { x: 0, y: 0, width: 1440, height: 1180 });
 
 // generate.png: start a prop run and wait until it is done, the stages listed with their state
-await open('/world/prop', 'Brass Signal Lantern');
+await open('/world/prop', 'Driftwood Fiddle');
 await page.getByRole('button', { name: 'Generate again' }).click();
 await page.getByRole('button', { name: 'Start' }).click();
 await page.getByText(/^Done\./).waitFor({ timeout: 120000 });

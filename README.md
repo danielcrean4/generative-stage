@@ -5,6 +5,8 @@ concept images, 3D models and motion clips with a record of exactly how every re
 
 ![The trace of a run: every stage, its prompt and where each word came from](docs/img/trace.png)
 
+The pictures here were made with the tool's built-in procedural generators, which draw each subject from the words of its brief and raise a 3D model from the drawing's outline, with no AI model; a model plugged in through the [adapter contract](docs/adapters.md) takes their place.
+
 You describe a world as linked records: a character *lives in* a setting, a prop *belongs to* a character. A pipeline
 turns a record's brief into assets, stage by stage. Every stage writes down what it read and what it made, so any
 asset can be opened to see the exact prompt, where each word of it came from, the inputs and outputs with their
@@ -12,7 +14,7 @@ hashes, and the measurements of every quality check. What you choose is exported
 that any engine can read.
 
 Everything runs on your own computer and nothing is sent anywhere. **No model ships with it and no GPU is needed**:
-every stage runs on a built-in stand-in that makes plain placeholder output, so the install, the example, the tests
+every stage runs on a built-in stand-in that draws its output procedurally, so the install, the example, the tests
 and the container all work as they are. A model of your own plugs in through a small, documented
 [adapter contract](docs/adapters.md).
 
@@ -22,9 +24,9 @@ It is a work in progress. Names, layout and interfaces may change.
 
 | | |
 |---|---|
-| ![A record with its chosen model](docs/img/viewer.png) | **A world of linked records.** Each record has a brief, fields from its kind's schema, notes, history and links; its chosen picture and model sit beside it, with a viewer. (The sphere is the stand-in's output.) |
-| ![The shape gate](docs/img/gate.png) | **A trace for every run, and checks that inform, not block.** Each stage shows its prompt, colour-coded by source, its settings, and its files with their hashes. Gates measure a result (is the subject whole, is the mesh closed, is it the right size) against limits; the choice stays with you. |
-| ![A rigged character](docs/img/character.png) | **Rigging and motion.** Headless Blender scripts rig a character and build clips procedurally; the viewer plays them. |
+| ![A prop with its chosen 3D model in the viewer](docs/img/viewer.png) | **A world of linked records.** Each record has a brief, fields from its kind's schema, notes, history and links; its chosen picture and model sit beside it, with a viewer. (Here, the Driftwood Fiddle's model, raised from its picture.) |
+| ![The shape gate's measures for the fiddle](docs/img/gate.png) | **A trace for every run, and checks that inform, not block.** Each stage shows its prompt, colour-coded by source, its settings, and its files with their hashes. Gates measure a result (is the subject whole, is the mesh closed, is it the right size) against limits; the choice stays with you. |
+| ![A rigged character walking in the clip player](docs/img/character.png) | **Rigging and motion.** Headless Blender scripts rig a character and build clips procedurally; the viewer plays them. |
 | ![Statistics](docs/img/statistics.png) | **Statistics from plain files.** Runs over time, time per stage, completed against errored, made against chosen. |
 
 Also: a record form generated from each kind's JSON Schema, revisions and notes on every record, a condition
