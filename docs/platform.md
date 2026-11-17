@@ -47,7 +47,7 @@ config ([configuration](../server/docs/configuration.md)): `data_dir`, by defaul
 To use a model of your own, edit the machine config (see [Integrating a model](adapters.md)): add an adapter entry and name it in
 `defaults`, then rerun a pipeline. To drive it from an agent, see [MCP](mcp.md); give it the API port above.
 
-`scripts/smoke.py <address>` checks a running install along the README walkthrough: the page loads, both servers answer,
+`scripts/smoke.py <address>` checks a running install along the walkthrough: the page loads, both servers answer,
 the adapters listed are the stand-ins, a copy of the example project loads under its own slug (`smoke-test`, unregistered at the end, so the example itself can still be loaded), a prop run on the stand-in
 succeeds, its trace shows every stage, a concept image and a 3D model can be chosen, the statistics count the run and an
 export bundle holds the model. With `--mcp-python server/.venv/bin/python` it also does the briefs, links, a run and the

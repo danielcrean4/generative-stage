@@ -5,7 +5,7 @@
 The project is made in DIR (default `~/generative-stage-example`, outside this checkout) as an ordinary project: its
 kinds, its store, its notes. Safe to run again: if the project is already registered nothing changes, and if DIR already
 holds the project file it is opened instead of made again. The seed holds records and links only; generating pictures
-and meshes is left to you (README, step 5). In a record's data, `{"entity": "<key>"}` stands for the id of the seed record
+and meshes is left to you (walkthrough, step 5). In a record's data, `{"entity": "<key>"}` stands for the id of the seed record
 with that key (a script line's speaker, for example); records that are named so come earlier in the seed. Standard library only.
 """
 
